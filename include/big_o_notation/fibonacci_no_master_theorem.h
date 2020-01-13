@@ -10,6 +10,8 @@
 #include <unordered_map>
 #include <functional>
 
+unsigned long binet_formula(unsigned long n);
+
 /**
  * Factory method class for all the possible Fibonacci number's generation.
  *

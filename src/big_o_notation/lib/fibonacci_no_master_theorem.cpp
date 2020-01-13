@@ -42,13 +42,15 @@ fibonacci_no_master_theorem::fibonacci_no_master_theorem() {
 
     // Binet Formula
     // If we approximate the mathematical operations as being O(1), then this implementation is the most efficient
-    map.insert(std::make_pair(BINET_FORMULA, [](unsigned long n)->unsigned long {
-        static const double phi = (1 + sqrt(5))*0.5;
-        double fib = (pow(phi,n) - pow(1-phi,n))/sqrt(5);
-        return round(fib);
-    }));
+    map.insert(std::make_pair(BINET_FORMULA, binet_formula));
 }
 
 void fibonacci_no_master_theorem::clearMemoization() {
     memoization.clear();
+}
+
+unsigned long binet_formula(unsigned long n) {
+    static const double phi = (1 + sqrt(5))*0.5;
+    double fib = (pow(phi,n) - pow(1-phi,n))/sqrt(5);
+    return round(fib);
 }

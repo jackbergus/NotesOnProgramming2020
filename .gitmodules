@@ -1,0 +1,9 @@
+[submodule "submodules/dlib"]
+	path = submodules/dlib
+	url = https://github.com/davisking/dlib
+[submodule "submodules/libfort"]
+	path = submodules/libfort
+	url = https://github.com/seleznevae/libfort
+[submodule "submodules/glm"]
+	path = submodules/glm
+	url = https://github.com/g-truc/glm

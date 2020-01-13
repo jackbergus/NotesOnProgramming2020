@@ -3,74 +3,47 @@
 #include <chrono>
 typedef std::chrono::high_resolution_clock Clock;
 
-#define MAX_ITERATIONS      (30)
-#define SAMPLES             (10)
+void doBenchmark(fibonacci_no_master_theorem &factory, double& average,  fibonacci_no_master_theorem::algorithm x, bool memoization, bool doBaseline);
 
+#define MAX_ITERATIONS      (30)
+#define SAMPLES             (50)
 
 int main() {
-
     fibonacci_no_master_theorem factory;;
 
     // Binet's formula
     double average = 0;
-    for (unsigned int i = 0; i<MAX_ITERATIONS; i++) {
-        auto before = Clock::now();
-        for (unsigned int j = 0; j<MAX_ITERATIONS; j++) {
-            factory.get(fibonacci_no_master_theorem::BINET_FORMULA, i);
-        }
-        auto t = (Clock::now() - before)/(MAX_ITERATIONS);
-        std::cout << t.count();
-        average += t.count();
-        if (i == MAX_ITERATIONS-1)
-            std::cout << std::endl;
-        else
-            std::cout << ",";
-    }
-    average /= MAX_ITERATIONS;
+    doBenchmark(factory, average, fibonacci_no_master_theorem::BINET_FORMULA, false, true);
 
     // Using recursion with memoization just for the first number, so to observe the worst case scenario
-    for (unsigned int i = 0; i<MAX_ITERATIONS; i++) {
-        auto before = Clock::now();
-        for (unsigned int j = 0; j<MAX_ITERATIONS; j++) {
-            factory.get(fibonacci_no_master_theorem::RECURSIVE_WITH_MEMOIZATION, i);
-            factory.clearMemoization();
-        }
-        auto t = (Clock::now() - before)/(MAX_ITERATIONS);
-        std::cout << std::round(t.count()/average);
-        if (i == MAX_ITERATIONS-1)
-            std::cout << std::endl;
-        else
-            std::cout << ",";
-    }
+    doBenchmark(factory, average, fibonacci_no_master_theorem::RECURSIVE_WITH_MEMOIZATION, true, false);
 
     // Using recursion with memoization, starting from the first element, so to observe the best case scenario
-    for (unsigned int i = 0; i<MAX_ITERATIONS; i++) {
-        auto before = Clock::now();
-        for (unsigned int j = 0; j<MAX_ITERATIONS; j++) {
-            factory.get(fibonacci_no_master_theorem::RECURSIVE_WITH_MEMOIZATION, i);
-        }
-        auto t = (Clock::now() - before)/(MAX_ITERATIONS);
-        std::cout << std::round(t.count()/average);
-        if (i == MAX_ITERATIONS-1)
-            std::cout << std::endl;
-        else
-            std::cout << ",";
-    }
+    doBenchmark(factory, average, fibonacci_no_master_theorem::RECURSIVE_WITH_MEMOIZATION, false, false);
 
     // Recursive function with no memoization (purely recursive)
-    for (unsigned int i = 0; i<MAX_ITERATIONS; i++) {
+    doBenchmark(factory, average, fibonacci_no_master_theorem::RECURSIVE, false, false);
+
+    return 0;
+}
+
+void doBenchmark(fibonacci_no_master_theorem &factory, double& average, fibonacci_no_master_theorem::algorithm x, bool clearMemoization, bool doBaseline) {
+    for (unsigned int i = 1; i < MAX_ITERATIONS; i++) {
         auto before = Clock::now();
-        for (unsigned int j = 0; j<MAX_ITERATIONS; j++) {
-            factory.get(fibonacci_no_master_theorem::RECURSIVE, i);
+        for (unsigned int j = 0; j<SAMPLES; j++) {
+            factory.get(x, i);
+            if (clearMemoization) factory.clearMemoization();
         }
-        auto t = (Clock::now() - before)/(MAX_ITERATIONS);
-        std::cout << std::round(t.count()/average);
+        auto t = (Clock::now() - before)/(SAMPLES);
+        if (doBaseline) {
+            std::cout << t.count(); average += t.count();
+        } else
+            std::cout << round(t.count()/average);
         if (i == MAX_ITERATIONS-1)
             std::cout << std::endl;
         else
             std::cout << ",";
     }
-
-
-    return 0;
+    if (doBaseline)
+        average /= MAX_ITERATIONS;
 }

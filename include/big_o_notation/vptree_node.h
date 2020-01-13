@@ -141,6 +141,7 @@ private:
         } else {
             if ((last - first) <= 1) {
                 // If the elements differ by two, then I decide that one is the root, and the other is the child
+                tree[first].radius = ker.distance(tree[first].pt, tree[last].pt);
                 tree[first].leftChild = last;
                 tree[first].rightChild = std::numeric_limits<unsigned int>::max();
             } else {

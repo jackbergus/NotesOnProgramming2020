@@ -72,6 +72,6 @@ void printing_float_representation() {
 
 void total_error_plot() {
     for (int i = 3; i<90; i++) {
-        std::cout << ((double)std::abs((long long)binet_formula_error(i) - (long long)binet_formula(i)))/((double)binet_formula(i)) << std::endl;
+        std::cout << "i=" << i << " --> " << ((double)std::abs((long long)binet_formula_error(i) - (long long)binet_formula(i)))/((double)binet_formula(i)) << std::endl;
     }
 }

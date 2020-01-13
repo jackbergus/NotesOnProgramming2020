@@ -41,7 +41,7 @@ glm::tvec3<float> normalizeNotZeroVector(const glm::tvec3<float> &x) {
 }
 
 std::pair<glm::tvec3<float>, bool>
-moreRobustCrossProductForSeparatingAxis(Vector &ab, Vector &cd, bool doRobust) {
+SepAxisCrossProd(Vector &ab, Vector &cd, bool doRobust) {
     // Determining the (numerical) vectors from the source and destination points;
     const glm::tvec3<float> vectorAB = ab.asVector(), vectorCD = cd.asVector();
 
@@ -108,13 +108,13 @@ void vector_test_intersection() {
 
     // false is the expected result: there should not be a separating axis (the two vectors are the same, and therefore
     // they are parallel).
-    std::cout << moreRobustCrossProductForSeparatingAxis(ab, ab) << std::endl;
+    std::cout << SepAxisCrossProd(ab, ab) << std::endl;
 
     // true is the expected result: there should be a separating axis given that the two vectors are indeed not the same,
     // because they differ only by a small quantity (e)
-    std::cout << moreRobustCrossProductForSeparatingAxis(ab, abDelta) << std::endl;
+    std::cout << SepAxisCrossProd(ab, abDelta) << std::endl;
 
     // false is the expected result: the algorithm is less robust, and then the test might fail.
-    std::cout << moreRobustCrossProductForSeparatingAxis(ab, abDelta, false) << std::endl;
+    std::cout << SepAxisCrossProd(ab, abDelta, false) << std::endl;
 }
 

@@ -101,7 +101,7 @@ glm::tvec3<float> normalizeNotZeroVector(const glm::tvec3<float>& x);
  *                  If that element exists, then it is returned in the first argument of the pair. Otherwise, the
  *                  first argument will be an arbitrary vector
  */
-std::pair<glm::tvec3<float>, bool> moreRobustCrossProductForSeparatingAxis(Vector &ab, Vector &cd, bool doRobust = true);
+std::pair<glm::tvec3<float>, bool> SepAxisCrossProd(Vector &ab, Vector &cd, bool doRobust = true);
 
 std::ostream &operator<<(std::ostream &os, const glm::tvec3<float> &cp);
 

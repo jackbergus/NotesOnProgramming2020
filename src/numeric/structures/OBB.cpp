@@ -68,7 +68,7 @@ bool NaifOverlap(OBB &a, OBB &b, bool doRobust) {
         std::function<bool(OBB&, OBB&, int, int)> testLambda = [doRobust](OBB& a, OBB& b, int i, int j) {
             std::pair<glm::tvec3<float>, bool> result;
             // If there is a separating axis
-            if ((result = moreRobustCrossProductForSeparatingAxis(a.local_axes[i], b.local_axes[j], doRobust)).second) {
+            if ((result = SepAxisCrossProd(a.local_axes[i], b.local_axes[j], doRobust)).second) {
                 // Check whether the elements do overlap or not
                 return (chunkNotOverlapTest(a, b, result.first));
             } else {

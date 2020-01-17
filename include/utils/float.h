@@ -19,6 +19,7 @@
 
 #define _IEEE754_H 1
 #ifdef  _WIN64 || _WIN32
+#define WINDOWS
 #include <Windows.h>
 #if REG_DWORD == REG_DWORD_LITTLE_ENDIAN
 #define LITTLE_ENDIAN
@@ -80,8 +81,11 @@ union ieee754_float
  * Putting the float inside a data structure which, by using a union with a float and bit for a struct, is able to
  * get which bits are which
  */
+#ifdef WINDOWS
+#define declare_printable_float(name, val)   ieee754_float name; name.f = (val)
+#else
 #define declare_printable_float(name, val)   ieee754_float name = { .f = (val) }
-
+#endif 
 /**
  * Operator printing the main representations when the exponent number is not zero (so, considering only the normalized cases)
  * // if (0 < classe.parts.exponent && classe.parts.exponent < 255)

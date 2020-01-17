@@ -50,11 +50,19 @@ void printing_float_representation() {
     std::cout << three << std::endl;
 
     std::cout << "Min" << std::endl;
+#ifndef WINDOWS
     declare_printable_float(minfloat, std::numeric_limits<float>::min());
+#else 
+	declare_printable_float(minfloat, FLT_MIN);
+#endif 
     std::cout << minfloat << std::endl;
 
     std::cout << "Max" << std::endl;
+#ifndef WINDOWS
     declare_printable_float(maxfloat, std::numeric_limits<float>::max());
+#else 
+	declare_printable_float(maxfloat, FLT_MAX);
+#endif 
     std::cout << maxfloat << std::endl;
 
     std::cout << "Lowest" << std::endl;

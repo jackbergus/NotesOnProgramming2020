@@ -69,7 +69,7 @@ template <typename Point, typename DistanceFunction> struct vp_tree {
         size_t i = 0;
         for (auto x : ls)
             tree.emplace_back(i++, x, 0);
-        recursive_restruct_tree(0, ls.size());
+        recursive_restruct_tree(0, ls.size()-1);
     }
 
     /**

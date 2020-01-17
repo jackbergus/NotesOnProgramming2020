@@ -18,9 +18,27 @@
 #ifndef _IEEE754_H
 
 #define _IEEE754_H 1
-#include <features.h>
+#ifdef  _WIN64 || _WIN32
+#define WINDOWS
+#include <Windows.h>
+#if REG_DWORD == REG_DWORD_LITTLE_ENDIAN
+#define LITTLE_ENDIAN
+#else
+#define BIG_ENDIAN
+#endif
+#endif 
 
+#ifdef unix || __unix || __unix__
+#include <features.h>
 #include <endian.h>
+#if	__BYTE_ORDER == __LITTLE_ENDIAN
+#define LITTLE_ENDIAN
+#elif __BYTE_ORDER == __BIG_ENDIAN
+#define BIG_ENDIAN
+#endif 
+#endif 
+
+
 #include <ostream>
 
 union ieee754_float
@@ -30,12 +48,12 @@ union ieee754_float
     /* This is the IEEE 754 single-precision format.  */
     struct
     {
-#if	__BYTE_ORDER == __LITTLE_ENDIAN
+#ifdef LITTLE_ENDIAN
         unsigned int mantissa:23;           // The remaining 23 bits are used to represent the mantissa
         unsigned int exponent:8;            // The subsequent 8 bits are assigned to the exponent
         unsigned int sign:1;                // The first bit, is assigned to the sign
 #endif				/* Little endian.  */
-#if	__BYTE_ORDER == __BIG_ENDIAN
+#ifdef BIG_ENDIAN
         // Big endians represent the numbers similarly, but in the reverse direction.
 
         unsigned int sign:1;
@@ -63,8 +81,11 @@ union ieee754_float
  * Putting the float inside a data structure which, by using a union with a float and bit for a struct, is able to
  * get which bits are which
  */
+#ifdef WINDOWS
+#define declare_printable_float(name, val)   ieee754_float name; name.f = (val)
+#else
 #define declare_printable_float(name, val)   ieee754_float name = { .f = (val) }
-
+#endif 
 /**
  * Operator printing the main representations when the exponent number is not zero (so, considering only the normalized cases)
  * // if (0 < classe.parts.exponent && classe.parts.exponent < 255)

@@ -18,23 +18,23 @@
 #ifndef _IEEE754_H
 
 #define _IEEE754_H 1
-#ifdef  _WIN64 || _WIN32
+#ifdef  _WIN64
 #define WINDOWS
 #include <Windows.h>
 #if REG_DWORD == REG_DWORD_LITTLE_ENDIAN
-#define LITTLE_ENDIAN
+#define IS_LITTLE_ENDIAN
 #else
-#define BIG_ENDIAN
+#define IS_BIG_ENDIAN
 #endif
 #endif 
 
-#ifdef unix || __unix || __unix__
+#ifdef unix
 #include <features.h>
 #include <endian.h>
 #if	__BYTE_ORDER == __LITTLE_ENDIAN
-#define LITTLE_ENDIAN
+#define IS_LITTLE_ENDIAN
 #elif __BYTE_ORDER == __BIG_ENDIAN
-#define BIG_ENDIAN
+#define IS_BIG_ENDIAN
 #endif 
 #endif 
 
@@ -48,12 +48,12 @@ union ieee754_float
     /* This is the IEEE 754 single-precision format.  */
     struct
     {
-#ifdef LITTLE_ENDIAN
+#ifdef IS_LITTLE_ENDIAN
         unsigned int mantissa:23;           // The remaining 23 bits are used to represent the mantissa
         unsigned int exponent:8;            // The subsequent 8 bits are assigned to the exponent
         unsigned int sign:1;                // The first bit, is assigned to the sign
 #endif				/* Little endian.  */
-#ifdef BIG_ENDIAN
+#ifdef IS_BIG_ENDIAN
         // Big endians represent the numbers similarly, but in the reverse direction.
 
         unsigned int sign:1;

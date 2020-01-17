@@ -5,8 +5,8 @@
 #ifndef TUTORIALS_VECTOR_H
 #define TUTORIALS_VECTOR_H
 
-#include <vec3.hpp>
 #include <glm.hpp>
+#include <vec3.hpp>
 #include <utility>
 #include <ostream>
 

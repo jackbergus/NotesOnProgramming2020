@@ -5,10 +5,10 @@
 #include <iostream>
 #include "numeric/structures/AABB.h"
 
-AABB::AABB(const glm::tvec3<float> &p1, const glm::tvec3<float> &p2) : p1(p1), p2(p2) {}
+AABB::AABB(const glm::tvec3<float> &m, const glm::tvec3<float> &M) : min(m), max(M) {}
 
 tagIntersectionTest AABB::testWithSphere(Sphere &s) {
-    const IntervalArithmetic &result = s.equation({p1.x, p2.x}, {p1.y, p2.y}, {p1.z, p2.z});
+    const IntervalArithmetic &result = s.equation({min.x, max.x}, {min.y, max.y}, {min.z, max.z});
     if (result.x > 0)
         return liesOutside;
     else if ((result.x <= 0) && (result.y <= 0)) {

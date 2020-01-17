@@ -16,8 +16,6 @@
 #include <numeric/structures/Vector.h>
 
 
-
-
 struct OBB {
     Vector center_point;            // OBB Center point
     Vector local_axes[3];         // Local x-, y-, and z- axes

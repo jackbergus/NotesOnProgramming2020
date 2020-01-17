@@ -21,7 +21,7 @@ struct IntervalArithmetic {
     IntervalArithmetic(float x, float y);
 
     /**
-     * Defining the interval over one single point
+     * Defining the interval over one single point: [c, c]
      * @param c
      */
     IntervalArithmetic(float c);
@@ -38,9 +38,6 @@ struct IntervalArithmetic {
     friend std::ostream &operator<<(std::ostream &os, const IntervalArithmetic &arithmetic);
 };
 
-IntervalArithmetic fprime(const IntervalArithmetic& x);
-
-IntervalArithmetic fsecond(const IntervalArithmetic& x);
 
 void examples_on_interval_arithmetic();
 

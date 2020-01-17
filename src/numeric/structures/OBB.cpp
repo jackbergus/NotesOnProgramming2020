@@ -28,22 +28,24 @@ OBB::OBB(const glm::tvec3<float> &c, const std::vector<Vector> &x, const glm::tv
  *
  * @param a  First OBB
  * @param b  Second OBB
- * @param n  Axis over which we want to test the overlap
+ * @param L  Axis over which we want to test the overlap
  * @return   Whether the overlap happens or not
  */
-static inline bool chunkNotOverlapTest(OBB& a, OBB& b, const glm::tvec3<float>& n) {
+static inline bool chunkNotOverlapTest(OBB& a, OBB& b, const glm::tvec3<float>& L) {
     auto tDiff = a.center_point.asVector() - b.center_point.asVector();
 #ifdef DEBUG
     std::cout << n << "\t\t: ";
     std::cout << std::fabs(glm::dot(tDiff, n)) << " > " <<  (a.e[0] * std::fabs(glm::dot(a.uM[0].asVector(), n)) + a.e[1] * std::fabs(glm::dot(a.uM[1].asVector(), n)) + a.e[2] * std::fabs(glm::dot(a.uM[2].asVector(), n)))
     << " + "<< (b.e[0] * std::fabs(glm::dot(b.uM[0].asVector(), n)) + b.e[1] * std::fabs(glm::dot(b.uM[1].asVector(), n)) + b.e[2] * std::fabs(glm::dot(b.uM[2].asVector(), n))) << std::endl;
 #endif
-    return std::fabs(glm::dot(tDiff, n)) > (a.halfwidth_sizes[0] * std::fabs(glm::dot(a.local_axes[0].asVector(), n)) + a.halfwidth_sizes[1] * std::fabs(glm::dot(a.local_axes[1].asVector(), n)) + a.halfwidth_sizes[2] * std::fabs(glm::dot(a.local_axes[2].asVector(), n)))
-                                           + (b.halfwidth_sizes[0] * std::fabs(glm::dot(b.local_axes[0].asVector(), n)) + b.halfwidth_sizes[1] * std::fabs(glm::dot(b.local_axes[1].asVector(), n)) + b.halfwidth_sizes[2] * std::fabs(glm::dot(b.local_axes[2].asVector(), n)));
+    return std::fabs(glm::dot(tDiff, L)) > (a.halfwidth_sizes[0] * std::fabs(glm::dot(a.local_axes[0].asVector(), L)) + a.halfwidth_sizes[1] * std::fabs(glm::dot(a.local_axes[1].asVector(), L)) + a.halfwidth_sizes[2] * std::fabs(glm::dot(a.local_axes[2].asVector(), L)))
+                                           + (b.halfwidth_sizes[0] * std::fabs(glm::dot(b.local_axes[0].asVector(), L)) + b.halfwidth_sizes[1] * std::fabs(glm::dot(b.local_axes[1].asVector(), L)) + b.halfwidth_sizes[2] * std::fabs(glm::dot(b.local_axes[2].asVector(), L)));
 }
 
 bool NaifOverlap(OBB &a, OBB &b, bool doRobust) {
     // Do return the first time that I see a separation: if the elements overlap, they shall overlap along all the axes
+    // In the first six axes cases, we do not need to perform any cross product. This part is shared between the robust
+    // and the non robust implementation.
     if (chunkNotOverlapTest(a, b, a.local_axes[0].asVector())) return false;
     if (chunkNotOverlapTest(a, b, a.local_axes[1].asVector())) return false;
     if (chunkNotOverlapTest(a, b, a.local_axes[2].asVector())) return false;
@@ -52,6 +54,8 @@ bool NaifOverlap(OBB &a, OBB &b, bool doRobust) {
     if (chunkNotOverlapTest(a, b, b.local_axes[1].asVector())) return false;
     if (chunkNotOverlapTest(a, b, b.local_axes[2].asVector())) return false;
 
+    // If we are not interested in the robust implementation of the cross product, then we can simply use the general purpose
+    // cross product defined by the GLM library...
     if (!doRobust) {
         // Using the naive version, with no robust cross product computation
         if (chunkNotOverlapTest(a, b, glm::cross(a.local_axes[0].asVector(), b.local_axes[0].asVector()))) return false;
@@ -64,29 +68,28 @@ bool NaifOverlap(OBB &a, OBB &b, bool doRobust) {
         if (chunkNotOverlapTest(a, b, glm::cross(a.local_axes[2].asVector(), b.local_axes[1].asVector()))) return false;
         if (chunkNotOverlapTest(a, b, glm::cross(a.local_axes[2].asVector(), b.local_axes[2].asVector()))) return false;
     } else {
-        // Using the cross product enhanced for this specific problem, i.e. for computing a separating axis
-        std::function<bool(OBB&, OBB&, int, int)> testLambda = [doRobust](OBB& a, OBB& b, int i, int j) {
+        // ... otherwise, use the cross product enhanced for this specific problem, i.e. for computing a separating axis.
+        std::function<bool(OBB&, OBB&, int, int)> thereIsNoOverlap = [doRobust](OBB& a, OBB& b, int i, int j) {
             std::pair<glm::tvec3<float>, bool> result;
-            // If there is a separating axis
+            // If there is a separating axis R^A_i\times B^B_j
             if ((result = SepAxisCrossProd(a.local_axes[i], b.local_axes[j], doRobust)).second) {
                 // Check whether the elements do overlap or not
                 return (chunkNotOverlapTest(a, b, result.first));
             } else {
-                // There is no separating axis because the cross product provides a nearly-zero vector: continue
-                //std::cout << "Skipped" << std::endl;
+                // otherwise, there is no separating axis because the cross product provides a nearly-zero vector: continue
                 return false;
             }
         };
 
-        if (testLambda(a, b, 0, 0)) return false;
-        if (testLambda(a, b, 0, 1)) return false;
-        if (testLambda(a, b, 0, 2)) return false;
-        if (testLambda(a, b, 1, 0)) return false;
-        if (testLambda(a, b, 1, 1)) return false;
-        if (testLambda(a, b, 1, 2)) return false;
-        if (testLambda(a, b, 2, 0)) return false;
-        if (testLambda(a, b, 2, 1)) return false;
-        if (testLambda(a, b, 2, 2)) return false;
+        if (thereIsNoOverlap(a, b, 0, 0)) return false;
+        if (thereIsNoOverlap(a, b, 0, 1)) return false;
+        if (thereIsNoOverlap(a, b, 0, 2)) return false;
+        if (thereIsNoOverlap(a, b, 1, 0)) return false;
+        if (thereIsNoOverlap(a, b, 1, 1)) return false;
+        if (thereIsNoOverlap(a, b, 1, 2)) return false;
+        if (thereIsNoOverlap(a, b, 2, 0)) return false;
+        if (thereIsNoOverlap(a, b, 2, 1)) return false;
+        if (thereIsNoOverlap(a, b, 2, 2)) return false;
     }
 
     // If there is no separating axis, then the elements do overlap
@@ -167,6 +170,7 @@ void obb_overlap_testing() {
         assert(NaifOverlap(a, a)); // Self containment == 1
         assert(NaifOverlap(b, b)); // Self containment == 1
         assert(!NaifOverlap(a, b)); // box b is centered in (10,10,10) and has a radius of 2, so it cannot overlap with b == 0
+        assert(!RobustOBBOverlap(a, b));
     }
 
     {
@@ -178,6 +182,7 @@ void obb_overlap_testing() {
         assert(NaifOverlap(a, a)); // Self containment == 1
         assert(NaifOverlap(b, b)); // Self containment == 1
         assert(NaifOverlap(a, b)); // a contains b, because a is bigger than b == 1
+        assert(RobustOBBOverlap(a, b));
     }
 
     // Making two OOB boxes overlap with only a small amount of change
@@ -194,20 +199,6 @@ void obb_overlap_testing() {
         assert(NaifOverlap(a, b, false)); // Partial overlap == 1
         assert(RobustOBBOverlap(a, b));     // If we use an epsilon which is bigger than e, 1e-6, then the test won't fail as expected.
         assert(RobustOBBOverlap(a, b, e));  // Using a smaller epsilon for the test
-    }
-
-    // Adding a smaller quantity, on the other hand, might cause some problems for testOBBOverlap for bigger error thresholds
-    {
-        float small_change = 0.000001;
-        OBB a{1, 1, 1};
-        OBB b{{2 + small_change, 2 + small_change, 2 + small_change}, {1, 1, 1}};
-
-        assert(NaifOverlap(a, a));        // Self containment == 1
-        assert(NaifOverlap(b, b));        // Self containment == 1
-        assert(!NaifOverlap(a, b));        // Partial overlap == 1
-        assert(!NaifOverlap(a, b, false)); // Partial overlap == 1
-        //assert(!testOBBOverlap(a, b));     // If we use an epsilon which is bigger than e, 1e-6, then the test fails
-        assert(!RobustOBBOverlap(a, b, e));  // Using a smaller epsilon for the test will make it pass
     }
 
 

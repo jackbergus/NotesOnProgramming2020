@@ -3,11 +3,14 @@
 //
 
 #include <iostream>
+#include <utility>
+#include <ostream>
+
 #include "numeric/structures/Vector.h"
 
 glm::tvec3<float> Vector::asVector() {
-    if (!hasPrecomputedResult) {
-        casted_difference = destination - source;
+    if (!hasPrecomputedResult) { // Check whether we have a precomputed GLM representation
+        casted_difference = destination - source; // Represent the vector as a GLM vector
         hasPrecomputedResult = true;
     }
     return casted_difference;

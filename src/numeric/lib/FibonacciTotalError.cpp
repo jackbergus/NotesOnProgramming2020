@@ -7,35 +7,20 @@
 #include <limits>
 #include "numeric/FibonacciTotalError.h"
 
-float powPhi_iterative(int pow) {
-    static const float phi = (1.0f + (float)sqrtf(5.0f))*0.5f;
+float iterative_pow(float base, int pow) {
     float intermediate = 1.0;
     if (pow <= 0)
         return 1.0;
     if (pow == 1)
-        return phi;
+        return base;
     for (int i = 1; i<=pow; i++)
-        intermediate *= phi;
+        intermediate *= base;
     return intermediate;
 }
-
-float powPhi2_iterative(int pow) {
-    static const float phi = 1.0f - ((1.0f + (float)sqrtf(5.0f))*0.5f);
-    float intermediate = 1.0;
-    if (pow <= 0)
-        return 1.0;
-    if (pow == 1)
-        return phi;
-    for (int i = 1; i<=pow; i++)
-        intermediate *= phi;
-    return intermediate;
-}
-
 
 unsigned long binet_formula_error(unsigned long n) {
-    static const double phi = (1 + sqrt(5))*0.5;
-    double fib = (powPhi_iterative(n) - powPhi2_iterative(n))/sqrt(5);
-    return round(fib);
+    float fib = (iterative_pow(((1.0f + (float)sqrtf(5.0f))*0.5f), n) - iterative_pow(( 1.0f - ((1.0f + (float)sqrtf(5.0f))*0.5f)), n))/sqrtf(5);
+    return roundf(fib);
 }
 
 
@@ -72,6 +57,6 @@ void printing_float_representation() {
 
 void total_error_plot() {
     for (int i = 3; i<90; i++) {
-        std::cout << "i=" << i << " --> " << ((double)std::abs((long long)binet_formula_error(i) - (long long)binet_formula(i)))/((double)binet_formula(i)) << std::endl;
+        std::cout <<  "i=" << i << " --> " << ((double)std::abs((long long)binet_formula_error(i) - (long long)binet_formula(i)))/((double)binet_formula(i)) << std::endl;
     }
 }

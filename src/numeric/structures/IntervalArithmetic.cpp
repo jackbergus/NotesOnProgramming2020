@@ -61,9 +61,9 @@ IntervalArithmetic &IntervalArithmetic::operator/=(const IntervalArithmetic &i) 
 
 IntervalArithmetic IntervalArithmetic::pow(unsigned int pow) {
     if ((x <= 0) && (0 <= y))  {
-        return {0, (float)std::max(std::pow(x, 2), std::pow(y, 2))};
+        return {0, (float)std::max(std::pow(x, pow), std::pow(y, pow))};
     } else {
-        return {(float)std::min(std::pow(x, 2), std::pow(y, 2)), (float)std::max(std::pow(x, 2), std::pow(y, 2))};
+        return {(float)std::min(std::pow(x, pow), std::pow(y, pow)), (float)std::max(std::pow(x, pow), std::pow(y, pow))};
     }
 }
 
@@ -72,12 +72,12 @@ std::ostream &operator<<(std::ostream &os, const IntervalArithmetic &arithmetic)
     return os;
 }
 
-IntervalArithmetic fprime(const IntervalArithmetic &x) {
-    return x / (x - IntervalArithmetic{1, 1});
+template <typename T> T fprime(const T &x, const T& one) {
+    return x / (x - one);
 }
 
-IntervalArithmetic fsecond(const IntervalArithmetic &x) {
-    return IntervalArithmetic{1, 1} + IntervalArithmetic{1, 1} / (x - IntervalArithmetic{1, 1});
+template <typename T> T fsecond(const T &x, const T& one) {
+    return one + one / (x - one);
 }
 
 void examples_on_interval_arithmetic() {
@@ -85,7 +85,10 @@ void examples_on_interval_arithmetic() {
     IntervalArithmetic six{6, 6};
     std::cout << (ics * (six - ics)) << std::endl; // [3, 15]
 
-    std::cout << fprime({3.0, 3.1}) << std::endl;   // [1.42857, 1.55]
-    std::cout << fsecond({3.0, 3.1}) << std::endl;  // [1.47619, 1.5]
+    std::cout << fprime<IntervalArithmetic>({2.9, 3.1}, {1.0,1.0}) << std::endl;   // [1.38095, 1.63158]
+    std::cout << fprime(3.0, 1.0) << std::endl;
+
+    std::cout << fsecond<IntervalArithmetic>({2.9, 3.1}, {1.0,1.0}) << std::endl;  // [1.47619, 1.52632]
+    std::cout << fsecond(3.0, 1.0) << std::endl;
 }
 

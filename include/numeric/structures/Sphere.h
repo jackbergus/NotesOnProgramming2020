@@ -12,7 +12,6 @@
 class Sphere {
     glm::tvec3<float> center;
     float radius;
-
 public:
     Sphere(const glm::tvec3<float> &center, float radius) : center(center), radius(radius) {}
     IntervalArithmetic equation(const glm::tvec3<float>& point);

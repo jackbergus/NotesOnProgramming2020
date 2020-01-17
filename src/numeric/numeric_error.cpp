@@ -10,8 +10,8 @@
 
 int main() {
     /// Introduction to the float representation and to the total error
-    //printing_float_representation();
-    //total_error_plot();
+    printing_float_representation();
+    total_error_plot();
 
     /// Interval Arithmetic (bounding the error with an interval)
     examples_on_interval_arithmetic();

@@ -16,8 +16,8 @@
    <http://www.gnu.org/licenses/>.  */
 
 #ifndef _IEEE754_H
-
 #define _IEEE754_H 1
+
 #ifdef  _WIN64
 #define WINDOWS
 #include <Windows.h>
@@ -36,8 +36,7 @@
 #elif __BYTE_ORDER == __BIG_ENDIAN
 #define IS_BIG_ENDIAN
 #endif 
-#endif 
-
+#endif
 
 #include <ostream>
 

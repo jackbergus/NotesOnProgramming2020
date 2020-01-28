@@ -7,3 +7,6 @@
 [submodule "submodules/glm"]
 	path = submodules/glm
 	url = https://github.com/g-truc/glm
+[submodule "submodules/csv"]
+	path = submodules/csv
+	url = https://github.com/ben-strasser/fast-cpp-csv-parser

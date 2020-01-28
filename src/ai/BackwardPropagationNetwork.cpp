@@ -11,6 +11,32 @@ std::ostream &operator<<(std::ostream &os, const BackwardPropagationNetwork &net
     return os;
 }
 
+void train_xor_bbn() {
+    srand(1);
+    //BackwardPropagationNetwork nn{2, {2,  1} };
+
+
+    BackwardPropagationNetwork nn;
+    nn.createLayer().addPerceptron({-0.394383, -0.197551}, -0.55397)
+            .addPerceptron({-0.79844, 0.76823}, 0.628871);
+    nn.createLayer().addPerceptron({0.513401, -0.916195}, 0.717297);
+    nn.finalize();
+
+    //std::cout << nn << std::endl;
+
+    finite_function ff;
+    ff.extendMap(0, {1, 1});
+    ff.extendMap(1, {1, 0});
+    ff.extendMap(1, {0, 1});
+    ff.extendMap(0, {0, 0});
+    nn.train(ff);
+
+    std::cout << nn.compute(ff.finite_function[0].input)[0] << std::endl;
+    std::cout << nn.compute(ff.finite_function[1].input)[0] << std::endl;
+    std::cout << nn.compute(ff.finite_function[2].input)[0] << std::endl;
+    std::cout << nn.compute(ff.finite_function[3].input)[0] << std::endl;
+}
+
 BackwardPropagationNetwork::BackwardPropagationNetwork() {}
 
 Layer &BackwardPropagationNetwork::createLayer() {

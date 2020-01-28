@@ -8,6 +8,7 @@
 
 #include <ai/Layer.h>
 #include <utils/FiniteFunction.h>
+#include <iostream>
 
 struct BackwardPropagationNetwork {
     size_t inputSize;
@@ -42,6 +43,9 @@ struct BackwardPropagationNetwork {
 
     void finalize();
 };
+
+
+void train_xor_bbn();
 
 
 #endif //TUTORIALS_BACKWARDPROPAGATIONNETWORK_H

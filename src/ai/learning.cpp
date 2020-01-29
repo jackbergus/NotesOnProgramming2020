@@ -2,50 +2,18 @@
 //
 // Created by ngb113 on 23/01/2020.
 //
+#include <ostream>
+#include <unordered_map>
+
+#include <dlib/dnn.h>
+#include <dlib/mlp.h>
 
 #include <ai/BackwardPropagationNetwork.h>
-
 #include "ai/SinglePerceptron.h"
 #include "ai/SupportVectorMachines.h"
 #include "utils/permutation.h"
 #include "ai/metrics/class_prediction_distance.h"
-#include <unordered_map>
-#include <unordered_set>
-
-#include <dlib/dnn.h>
-
-
-void machine_learning_algorithms() {
-    // A) Learning the And, Or and Xor function
-    // Neural network simple examples
-    training_or_perceptron();
-    training_and_perceptron();
-    training_xor_perceptron1_fail();
-    training_xor_perceptron2_fail();
-    train_xor_bbn();
-
-    // SVN simple examples
-    train_binary_svm(bool_and);
-    train_binary_svm(bool_or);
-    train_binary_svm(bool_xor);
-
-    // B) Real world games dataset: StarCraft 2 replay files
-    // https://developer.ibm.com/patterns/analyze-starcraft-ii-replays-with-jupyter-notebooks/
-    // For these exaples, we're going to use the BBN from DLib
-}
-
-#include <ostream>
-
-
-
-
-
-#include <dlib/mlp.h>
 #include <ai/datasets/DLibSplits.h>
-
-using namespace dlib;
-
-
 
 
 void mlp_train(const DLib_Splits& splits, const unsigned numberClasses, const size_t input_size) {/*
@@ -58,7 +26,7 @@ void mlp_train(const DLib_Splits& splits, const unsigned numberClasses, const si
     const size_t iterationNumber = 100;
 
     double candidateScore = std::numeric_limits<double>::max();
-    mlp::kernel_1a_c candidateNet(1, 1);    // dummy net: at the end, will store the best trained one
+    dlib::mlp::kernel_1a_c candidateNet(1, 1);    // dummy net: at the end, will store the best trained one
 
     std::cout << "Training is starting..." << std::endl;
     size_t maxFirstLayer = std::min((numberClasses+1L) * 5L, 30L);
@@ -72,7 +40,7 @@ void mlp_train(const DLib_Splits& splits, const unsigned numberClasses, const si
             // (which means it takes column vectors of length 2 as input) and 5 nodes in the first
             // hidden layer.  Note that the other 4 variables in the mlp's constructor are left at
             // their default values.
-            mlp::kernel_1a_c net(input_size, firstLayer, secondLayer, numberClasses+1);
+            dlib::mlp::kernel_1a_c net(input_size, firstLayer, secondLayer, numberClasses+1);
             size_t epoch = 0;
 
             double distance;
@@ -184,7 +152,7 @@ void multi_svm_train(const DLib_Splits& splits, const unsigned numberClasses, co
 
     // Next, if you wanted to obtain the decision rule learned by a one_vs_one_trainer you
     // would store it into a one_vs_one_decision_function.
-    one_vs_one_decision_function<ovo_trainer> df = trainer.train(splits.training_input, splits.training_labels);
+    dlib::one_vs_one_decision_function<ovo_trainer> df = trainer.train(splits.training_input, splits.training_labels);
 
     size_t N = std::min(splits.testing_label_vector.size(), splits.testing_input.size());
     double distance = 0.0;
@@ -246,6 +214,23 @@ void multi_rtree_train() {
 }
 
 int main(void) {
+    // A) Learning the And, Or and Xor function
+    // Neural network simple examples
+    training_or_perceptron();
+    training_and_perceptron();
+    training_xor_perceptron1_fail();
+    training_xor_perceptron2_fail();
+    train_xor_bbn();
+
+    // SVN simple examples
+    train_binary_svm(bool_and);
+    train_binary_svm(bool_or);
+    train_binary_svm(bool_xor);
+
+    // B) Real world games dataset: StarCraft 2 replay files
+    // https://developer.ibm.com/patterns/analyze-starcraft-ii-replays-with-jupyter-notebooks/
+    // For these exaples, we're going to use the BBN from DLib
+
     // Loading the Starcraft Replay dataset, and selecting the relevant dimensions using the different class:
     // either dataset_9_dimensions or dataset_full_dimensions can be used
     DLib_Splits splits;

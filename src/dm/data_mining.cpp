@@ -49,7 +49,74 @@ private:
 };
 
 using STLexic = struct LexicographicalOrder<Transaction<std::string>, std::string>;
+using VTLexic = struct LexicographicalOrder<std::vector<std::string>, std::string>;
 using DeckSet = std::set<Transaction<std::string>, STLexic>;
+
+template <typename T> bool IsSubset(std::vector<T> A, std::vector<T> B) {
+    std::sort(A.begin(), A.end());
+    std::sort(B.begin(), B.end());
+    return std::includes(A.begin(), A.end(), B.begin(), B.end());
+}
+
+struct Rule {
+        std::vector<std::string> pred;
+        std::vector<std::string> succ;
+};
+
+struct FunctionEntrypoint {
+    // Creating the support function used for the
+    std::map<std::vector<std::string>, unsigned long, VTLexic> f;
+    double sumAll = 0.0;
+
+    FunctionEntrypoint(const std::set<Pattern<std::string>>& S) {
+        for (auto x : S) {
+            std::vector<std::string> v{};
+            v.reserve(x.first.size());
+            for (auto it = x.first.begin(); it != x.first.end(); ) {
+                v.push_back(std::move(x.first.extract(it++).value()));
+            }
+            f[v] = x.second;
+            sumAll += x.second;
+        }
+    }
+
+    size_t support(std::vector<std::string>& i) {
+        size_t sum = 0;
+        for (auto it = f.begin(); it != f.end(); it++) {
+            if (IsSubset(it->first, i)) {
+                sum += it->second;
+            }
+        }
+        return sum;
+    }
+
+    double support(Rule& r) {
+        std::vector<std::string> unione;
+        for (const std::string& x: r.pred) unione.emplace_back(x);
+        for (const std::string& x: r.succ) unione.emplace_back(x);
+        std::sort(unione.begin(), unione.end());
+        unione.erase(std::unique(unione.begin(), unione.end()), unione.end());
+        return ((double)support(unione)) / sumAll;
+    }
+
+    double confidence(Rule& r) {
+        std::vector<std::string> unione;
+        for (const std::string& x: r.pred) unione.emplace_back(x);
+        for (const std::string& x: r.succ) unione.emplace_back(x);
+        std::sort(unione.begin(), unione.end());
+        unione.erase(std::unique(unione.begin(), unione.end()), unione.end());
+        return ((double)support(unione))/((double)support(r.pred));
+    }
+
+    double lift(Rule& r) {
+        std::vector<std::string> unione;
+        for (const std::string& x: r.pred) unione.emplace_back(x);
+        for (const std::string& x: r.succ) unione.emplace_back(x);
+        std::sort(unione.begin(), unione.end());
+        unione.erase(std::unique(unione.begin(), unione.end()), unione.end());
+        return ((double)support(unione))/(((double)support(r.pred))*((double)support(r.succ)));
+    }
+};
 
 int main(void) {
     // Loading the Clash Royale dataset. Even though we have more than 200 dimensions, we are only interested in a few of them
@@ -108,10 +175,13 @@ int main(void) {
         {
             std::cout << "a) creating the tree" << std::endl;
             const FPTree<std::string> fptree{ transactions, minimum_support_threshold };
+
+            std::cout << "b) computing the most frequent patterns" << std::endl;
             patterns = fptree_growth( fptree );
         }
 
         {
+            std::cout << "c) Saving all the patterns in the file as a backup measure" << std::endl;
             std::ofstream mined_patterns{patterns_file};
             for (const Pattern<std::string>& pattern : patterns) {
                 mined_patterns << pattern.second << " : ";
@@ -121,27 +191,37 @@ int main(void) {
                 mined_patterns << std::endl;
             }
         }
-
     } else {
-
         std::cout << "Patterns have been already mined in a previous computation: loading from the file!" << std::endl;
         std::ifstream mined_patterns{patterns_file};
+
+        // The place that will contain the line from the file
         std::string line;
-        while (std::getline(mined_patterns, line))
-        {
+
+        // Reading all the lines
+        while (std::getline(mined_patterns, line)) {
             std::istringstream iss(line);
             uint64_t frequency;
             std::string item;
             char delimiter;
+
+            // The first element in the row is the frequency value and some delimiter.
             iss >> frequency >> delimiter;
+            // Assertion on the delimiter separating the frequency from the items
             assert(delimiter = ':');
+
+            // Storing all the elements in the pattern
             std::set<std::string> pattern;
             while (iss >> item) pattern.emplace(item);
+
+            // Storing the resulting pair in the set
             Pattern<std::string> mined{pattern, frequency};
             patterns.emplace(mined);
-            // process pair (a,b)
         }
     }
 
     std::cout << patterns.size() << " patterns have been mined! " << std::endl;
+
+
+
 }

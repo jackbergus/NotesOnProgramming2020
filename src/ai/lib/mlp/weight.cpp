@@ -2,7 +2,7 @@
 // Created by giacomo on 24/01/2020.
 //
 
-#include "ai/weight.h"
+#include "ai/mlp/weight.h"
 
 weight::weight(std::default_random_engine &re) {
     reset(re);

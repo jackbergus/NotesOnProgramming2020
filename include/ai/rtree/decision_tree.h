@@ -2,8 +2,8 @@
 // Created by giacomo on 29/01/2020.
 //
 
-#ifndef TUTORIALS_METRIC_TABLE_H
-#define TUTORIALS_METRIC_TABLE_H
+#ifndef TUTORIALS_DECISION_TREE_H
+#define TUTORIALS_DECISION_TREE_H
 
 
 #include "split_field.h"
@@ -11,21 +11,21 @@
 #include <ai/datasets/DLibSplits.h>
 
 template <typename metric>
-struct metric_table {
+struct decision_tree {
     std::vector<metric_row>  rows;
     std::string              class_field;       // the field that contains the class names
     double                   positive_example;  // value providing the exact example
     std::vector<std::string> table_schema;      // the columns' names except from the class field
     struct split_field       root;
-    std::vector<metric_table>            children;
+    std::vector<decision_tree>            children;
     metric                   functions;
 
-    metric_table() = default;
-    ~metric_table() = default;
-    metric_table(const metric_table<metric>& x) = default;
-    metric_table& operator=(const metric_table<metric>& x) = default;
+    decision_tree() = default;
+    ~decision_tree() = default;
+    decision_tree(const decision_tree<metric>& x) = default;
+    decision_tree& operator=(const decision_tree<metric>& x) = default;
 
-    metric_table(DLib_Splits& populator, double positive) {
+    decision_tree(DLib_Splits& populator, double positive) {
         table_schema = populator.colnames;
         class_field = table_schema.front();
         table_schema.erase(table_schema.begin());
@@ -86,8 +86,8 @@ struct metric_table {
         } else {
             children.emplace_back();
             children.emplace_back();
-            metric_table& left = children[0];
-            metric_table& right = children[1];
+            decision_tree& left = children[0];
+            decision_tree& right = children[1];
             left.table_schema = right.table_schema = table_schema;
             left.class_field = right.class_field = class_field;
             left.positive_example = right.positive_example = positive_example;
@@ -121,11 +121,11 @@ struct metric_table {
         return class_probability(row);
     }
 
-    template <typename metric2> static std::pair<double, std::set<double>> classify(std::vector<struct metric_table<metric2>>& classes, const dlib::matrix<double> row) {
+    template <typename metric2> static std::pair<double, std::set<double>> classify(std::vector<struct decision_tree<metric2>>& classes, const dlib::matrix<double> row) {
         double score = -std::numeric_limits<double>::max();
         std::set<double> candidates;
 
-        for (struct metric_table<metric2>& classifier : classes) {
+        for (struct decision_tree<metric2>& classifier : classes) {
             double currentClass = classifier.positive_example;
             double prob = classifier.class_probability(row);
             if (prob > score) {
@@ -268,4 +268,4 @@ private:
 };
 
 
-#endif //TUTORIALS_METRIC_TABLE_H
+#endif //TUTORIALS_DECISION_TREE_H

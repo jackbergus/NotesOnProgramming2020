@@ -7,7 +7,7 @@
 
 #include <vector>
 #include "weight.h"
-#include "../utils/printers.h"
+#include "utils/printers.h"
 
 std::vector<double> operator*(const std::vector<double>& lhs, double rhs);
 std::vector<double> operator*(const std::vector<double>& lhs, const std::vector<double>& rhs);

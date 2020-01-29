@@ -3,7 +3,7 @@
 //
 
 #include <algorithm>
-#include "ai/Perceptron.h"
+#include "ai/mlp/Perceptron.h"
 #include "utils/Functionals.h"
 
 #define SIGMOID(x)          ((1.0) / (1.0+ std::exp(-(x))))

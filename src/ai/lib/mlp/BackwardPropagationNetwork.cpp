@@ -4,7 +4,7 @@
 
 #include <cassert>
 #include <iostream>
-#include "ai/BackwardPropagationNetwork.h"
+#include "ai/mlp/BackwardPropagationNetwork.h"
 
 std::ostream &operator<<(std::ostream &os, const BackwardPropagationNetwork &network) {
     os << "layers: " << network.layers;

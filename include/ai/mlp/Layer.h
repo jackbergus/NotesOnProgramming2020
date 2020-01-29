@@ -6,7 +6,7 @@
 #define TUTORIALS_LAYER_H
 
 
-#include <ai/Perceptron.h>
+#include <ai/mlp/Perceptron.h>
 
 /**
  * A layer is just an array of neurons

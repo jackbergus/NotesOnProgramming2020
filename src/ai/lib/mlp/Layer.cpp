@@ -3,7 +3,7 @@
 //
 
 #include <cassert>
-#include "ai/Layer.h"
+#include "ai/mlp/Layer.h"
 
 std::ostream &operator<<(std::ostream &os, const Layer &layer) {
     os << "perceptrons: " << layer.perceptrons << " currentOutput: " << layer.currentOutput;

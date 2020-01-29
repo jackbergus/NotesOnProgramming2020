@@ -6,7 +6,7 @@
 #define TUTORIALS_BACKWARDPROPAGATIONNETWORK_H
 
 
-#include <ai/Layer.h>
+#include <ai/mlp/Layer.h>
 #include <utils/FiniteFunction.h>
 #include <iostream>
 

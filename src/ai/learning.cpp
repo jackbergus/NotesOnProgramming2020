@@ -8,8 +8,8 @@
 #include <dlib/dnn.h>
 #include <dlib/mlp.h>
 
-#include <ai/BackwardPropagationNetwork.h>
-#include "ai/SinglePerceptron.h"
+#include <ai/mlp/BackwardPropagationNetwork.h>
+#include "ai/mlp/SinglePerceptron.h"
 #include "ai/SupportVectorMachines.h"
 #include "utils/permutation.h"
 #include "ai/metrics/class_prediction_distance.h"
@@ -176,7 +176,7 @@ void multi_svm_train(const DLib_Splits& splits, const unsigned numberClasses, co
 #include <unordered_map>
 #include <ai/datasets/StarcraftAllDimensions.h>
 #include <ai/metrics/entropy_metric.h>
-#include <ai/rtree/metric_table.h>
+#include <ai/rtree/decision_tree.h>
 
 
 void multi_rtree_train() {
@@ -185,10 +185,10 @@ void multi_rtree_train() {
                                                                                                false, 0.7);
 
     // Training the model one class against the other
-    std::vector<struct metric_table<entropy_metric>> classifiers;
+    std::vector<struct decision_tree<entropy_metric>> classifiers;
     for (double classe = 1.0; classe <= 8.0; classe++) {
         std::cout << classe << std::endl;
-        struct metric_table<entropy_metric> predict_class(splits, classe);
+        struct decision_tree<entropy_metric> predict_class(splits, classe);
         predict_class.expand(5);
         classifiers.insert(classifiers.begin(), predict_class);
         std::cout << std::endl << std::endl;
@@ -198,7 +198,7 @@ void multi_rtree_train() {
     double distance = 0.0;
     for (size_t i = 0; i<N; i++) {
         double ithDistance = 0.0;
-        std::pair<double, std::set<double>> result = metric_table<entropy_metric>::classify<entropy_metric>(classifiers, splits.testing_input[i]);
+        std::pair<double, std::set<double>> result = decision_tree<entropy_metric>::classify<entropy_metric>(classifiers, splits.testing_input[i]);
         ithDistance = class_prediction_distance(splits.testing_labels[i], result.second);
         // normalize the distance
         ithDistance = ithDistance / (ithDistance+1.0);

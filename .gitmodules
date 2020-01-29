@@ -10,3 +10,9 @@
 [submodule "submodules/csv"]
 	path = submodules/csv
 	url = https://github.com/ben-strasser/fast-cpp-csv-parser
+[submodule "submodules/rang"]
+	path = submodules/rang
+	url = https://github.com/agauniyal/rang
+[submodule "submodules/fpgrowth"]
+	path = submodules/fpgrowth
+	url = https://github.com/jackbergus/FP-growth.git

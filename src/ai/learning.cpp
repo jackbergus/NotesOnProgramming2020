@@ -4,6 +4,10 @@
 //
 #include <ostream>
 #include <unordered_map>
+#ifdef _WIN64
+#include <limits>			// in Windows, the only way to get numeric_limits
+#include <algorithm>		// in Windows, the only way to get min
+#endif
 
 #include <dlib/dnn.h>
 #include <dlib/mlp.h>
@@ -29,7 +33,7 @@ void mlp_train(const DLib_Splits& splits, const unsigned numberClasses, const si
     dlib::mlp::kernel_1a_c candidateNet(1, 1);    // dummy net: at the end, will store the best trained one
 
     std::cout << "Training is starting..." << std::endl;
-    size_t maxFirstLayer = std::min((numberClasses+1L) * 5L, 30L);
+    size_t maxFirstLayer = std::min(((unsigned long)(numberClasses+1L) * 5L), (unsigned long)30L);
     std::cout << "maxFirstLayer: " << maxFirstLayer << std::endl;
     for (int firstLayer =  maxFirstLayer; firstLayer >= 0; firstLayer--) {
         size_t maxSecondLayer = std::max(std::floor(((numberClasses+1.0) + firstLayer)/2.0), (numberClasses+1.0)*2.0);
@@ -233,6 +237,8 @@ int main(void) {
 
     // Loading the Starcraft Replay dataset, and selecting the relevant dimensions using the different class:
     // either dataset_9_dimensions or dataset_full_dimensions can be used
+	// WARNING! Please check that the "data" folder is located in the Project Directory, or that the executable
+	// is run in the same folder where the dataset is
     DLib_Splits splits;
     const std::pair<const size_t, const size_t> &info = generateSplit<dataset_full_dimensions>("data/starcraft.csv", splits,
                                                                                                true, 0.7);

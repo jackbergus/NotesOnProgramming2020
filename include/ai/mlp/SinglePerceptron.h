@@ -15,6 +15,11 @@
 #include <cmath>
 #include <iostream>
 
+#ifdef _WIN64
+#include <limits>			// in Windows, the only way to get numeric_limits
+#include <algorithm>		// in Windows, the only way to get min
+#endif
+
 /*
  * This model implements the easiest definition of a single neuron/perceptron, as in the one from the old ADALINE model
  */

@@ -4,6 +4,7 @@
 
 #include "ai/mlp/SinglePerceptron.h"
 
+
 size_t single_perceptron::estimate_input_size() {
     return input_weights.size();
 }

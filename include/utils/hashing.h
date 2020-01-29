@@ -8,7 +8,7 @@
 #include <ctime>
 #include <functional>
 
-size_t multihash() { return 0; }
+size_t multihash();
 
 template <typename T> size_t multihash(T var1) {
     return std::hash<T>()(var1);

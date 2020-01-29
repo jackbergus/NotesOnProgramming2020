@@ -8,7 +8,7 @@
 #include "ai/SinglePerceptron.h"
 #include "ai/SupportVectorMachines.h"
 #include "utils/permutation.h"
-#include "class_prediction_distance.h"
+#include "ai/metrics/class_prediction_distance.h"
 #include <unordered_map>
 #include <unordered_set>
 
@@ -45,37 +45,7 @@ void machine_learning_algorithms() {
 
 using namespace dlib;
 
-#if 0
-template <typename MLPType>
-double mlp_train(MLPType& net, struct DLib_Splits &f, const size_t iterationNumber) {
-    size_t epoch = 0;
-    while (epoch < iterationNumber)
-    {
-        // For all the elements in the finite function f
-        double RMSE_ERROR = 0.0;
-        size_t N = std::min(f.training_input.size(), f.training_labels.size());
-        for (int i = 0; i < N; i++) {
-            std::vector<double> result = compute(f.finite_function[i].input);
-            RMSE_ERROR += std::pow(calculateQuadraticError(f.finite_function[i].output), 2);
 
-
-            calculateDerivatives(f.finite_function[i].output);
-            gradientUpdate();
-            updateWeight(learningRate, momentum);
-            //std::cout << *this << std::endl;
-        }
-        RMSE_ERROR = std::sqrt(RMSE_ERROR);
-        std::cout << RMSE_ERROR << "--" << epoch << std::endl;
-        epoch = epoch + 1;
-
-        //Adding some motivation so if the neural network is not converging after 4000 epochs it will start over again until it converges
-        if (epoch > 4000 && RMSE_ERROR > 0.5) {
-            net.reset();
-            epoch = 0;
-        }
-    }
-}
-#endif
 
 
 void mlp_train(const DLib_Splits& splits, const unsigned numberClasses, const size_t input_size) {/*
@@ -140,7 +110,7 @@ void mlp_train(const DLib_Splits& splits, const unsigned numberClasses, const si
             }
 
             std::cout << "firstLayer: " << firstLayer << " secondLayer: " << secondLayer << " score: " << distance << std::endl;
-            if (distance >= 0.7) {
+            if (distance >= 0.67803) {
                 /// Heuristic: from the previous training, it seems that this is the maximum error that can be achieved, and that if I reach this value, then no further configuration will work
                 std::cout<< "break!" << std::endl;
                 break;
@@ -235,15 +205,64 @@ void multi_svm_train(const DLib_Splits& splits, const unsigned numberClasses, co
     std::cout << "Model precision over the testing data: " << precision << std::endl;
 }
 
+#include <unordered_map>
+#include <ai/datasets/StarcraftAllDimensions.h>
+#include <ai/metrics/entropy_metric.h>
+#include <ai/rtree/metric_table.h>
+
+
+void multi_rtree_train() {
+    DLib_Splits splits;
+    const std::pair<const size_t, const size_t> &info = generateSplit<dataset_full_dimensions>("data/starcraft.csv", splits,
+                                                                                               false, 0.7);
+
+    // Training the model one class against the other
+    std::vector<struct metric_table<entropy_metric>> classifiers;
+    for (double classe = 1.0; classe <= 8.0; classe++) {
+        std::cout << classe << std::endl;
+        struct metric_table<entropy_metric> predict_class(splits, classe);
+        predict_class.expand(5);
+        classifiers.insert(classifiers.begin(), predict_class);
+        std::cout << std::endl << std::endl;
+    }
+
+    size_t N = std::min(splits.testing_label_vector.size(), splits.testing_input.size());
+    double distance = 0.0;
+    for (size_t i = 0; i<N; i++) {
+        double ithDistance = 0.0;
+        std::pair<double, std::set<double>> result = metric_table<entropy_metric>::classify<entropy_metric>(classifiers, splits.testing_input[i]);
+        ithDistance = class_prediction_distance(splits.testing_labels[i], result.second);
+        // normalize the distance
+        ithDistance = ithDistance / (ithDistance+1.0);
+        distance += ithDistance;
+    }
+    // distance normalization
+    distance = (distance) / ((double)N);
+    // invert the distance, so to obtain the precision
+    double precision = 1.0 - distance;
+
+    std::cout << "Model precision over the testing data: " << precision << std::endl;
+
+}
+
 int main(void) {
     // Loading the Starcraft Replay dataset, and selecting the relevant dimensions using the different class:
     // either dataset_9_dimensions or dataset_full_dimensions can be used
-    DLib_Splits out;
-    const std::pair<const size_t, const size_t> &info = generateSplit<dataset_9_dimensions>("data/starcraft.csv",out);
-
-    // Using DLib's implementation of the multilayer perceptron network
-    mlp_train(out, info.first, info.second);
+    DLib_Splits splits;
+    const std::pair<const size_t, const size_t> &info = generateSplit<dataset_full_dimensions>("data/starcraft.csv", splits,
+                                                                                               true, 0.7);
 
     // Using DLib's implementation of the mutliclass svm classifier
-    multi_svm_train(out, info.first, info.second);
+    std::cout << "Multiple SVM Training" << std::endl;
+    multi_svm_train(splits, info.first, info.second);
+    std::cout << std::endl << std::endl;
+
+    // Using DLib's implementation of the multilayer perceptron network
+    std::cout << "MLP Training" << std::endl;
+    mlp_train(splits, info.first, info.second);
+    std::cout << std::endl << std::endl;
+
+    std::cout << "Multi RTree Training (Need to reload a non-normalized dataset)" << std::endl;
+    multi_rtree_train();
+    std::cout << std::endl << std::endl;
 }

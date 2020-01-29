@@ -3,3 +3,5 @@
 //
 
 #include "utils/hashing.h"
+
+size_t multihash() { return 0; }

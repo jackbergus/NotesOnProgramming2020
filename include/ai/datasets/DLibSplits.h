@@ -9,9 +9,11 @@
 #include <dlib/matrix.h>
 
 struct DLib_Splits {
+    size_t dimension;
+
+    std::vector<std::string> colnames;
     std::vector<dlib::matrix<double>> training_input, testing_input, training_label_vector, testing_label_vector;
     std::vector<double> training_labels, testing_labels;
-
 };
 
 #endif //TUTORIALS_DLIBSPLITS_H

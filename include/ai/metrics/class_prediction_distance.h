@@ -2,22 +2,17 @@
 // Created by giacomo on 28/01/2020.
 //
 
-#include "class_prediction_distance.h"
+#ifndef TUTORIALS_CLASS_PREDICTION_DISTANCE_H
+#define TUTORIALS_CLASS_PREDICTION_DISTANCE_H
 
-double class_prediction_distance(const dlib::matrix<double> &m, const unsigned long expected) {
-    double maxValue = -std::numeric_limits<double>::max();
-    std::set<unsigned long> candidates;
-    for (size_t i = 0, N = m.size(); i<N; i++) {
-        if (maxValue < m(i)) {
-            maxValue = m(i);
-            candidates.clear();
-            candidates.emplace(i);
-        } else if (maxValue == m(i)) {
-            candidates.emplace(i);
-        }
-    }
+#include <dlib/matrix.h>
+#include <set>
 
-    //assert(candidates.size() <= 1);
+double class_prediction_distance(const dlib::matrix<double>& m, const unsigned long expected);
+
+template <typename T>
+double class_prediction_distance(const T expected,
+                                 std::set<T> &candidates) {//assert(candidates.size() <= 1);
 
     // Getting the average distance between all the candidates and the expected label
     double avgPredictionSimilarity = 0.0;
@@ -25,7 +20,7 @@ double class_prediction_distance(const dlib::matrix<double> &m, const unsigned l
     // a) first, evaluate the average distance between the componetns
     for (auto it = candidates.begin(); it != candidates.cend(); it++) {
         // evaluate the distance between expected and predicted label
-        double tmpDistance = std::abs(((long)*it) - (long)expected);
+        double tmpDistance = std::abs(((double)*it) - (double)expected);
         // sum the normalized distance
         avgPredictionSimilarity += (tmpDistance / (tmpDistance + 1));
     }
@@ -56,3 +51,5 @@ double class_prediction_distance(const dlib::matrix<double> &m, const unsigned l
     return avgPredictionDistance;
 #endif
 }
+
+#endif //TUTORIALS_CLASS_PREDICTION_DISTANCE_H

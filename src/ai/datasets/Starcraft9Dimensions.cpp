@@ -19,18 +19,18 @@ size_t dataset_9_dimensions::operator()(const StarcraftReplayDataset &str) const
 }
 
 void dataset_9_dimensions::fit_sample(std::vector<dlib::matrix<double>> &dataset, std::vector<double> &classes,
-                                      const StarcraftReplayDataset &x) {
+                                      const StarcraftReplayDataset &x, bool normalize) {
     dlib::matrix<double> sample(dimensions, 1);
-    sample(0) = x.APM / 390.0;
+    sample(0) = x.APM / (normalize ? 390.0 : 1.0);
     sample(1) = x.SelectByHotkeys;
     sample(2) = x.AssignToHotkeys;
     sample(3) = x.UniqueHotkeys;
     sample(4) = x.MinimapAttacks;
     sample(5) = x.MinimapRightClicks;
     sample(6) = x.NumberOfPACs;
-    sample(7) = x.GapBetweenPACs / 238.0;
-    sample(8) = x.ActionLatency / 177.0;
-    assert(max(sample) <= 1.0); // Checking that all the data inputs are in [0,1]
+    sample(7) = x.GapBetweenPACs / (normalize ? 238.0 : 1.0);
+    sample(8) = x.ActionLatency / (normalize ? 177.0 : 1.0);
+    assert((!normalize) || max(sample) <= 1.0); // Checking that all the data inputs are in [0,1]
     dataset.emplace_back(sample);
     classes.emplace_back(x.league_index);
 }
@@ -44,4 +44,8 @@ void dataset_9_dimensions::fit_output(std::vector<dlib::matrix<double>> &dataset
     }
     assert(max(sample) == 1.0);
     dataset.emplace_back(sample);
+}
+
+void dataset_9_dimensions::set_label_names(std::vector<std::string> &schema_name) {
+    schema_name = {"league_index", "APM", "SelectByHotkeys", "AssignToHotkeys", "UniqueHotkeys", "MinimapAttacks", "MinimapRightClicks", "NumberOfPACs", "GapBetweenPACs", "ActionLatency"};
 }

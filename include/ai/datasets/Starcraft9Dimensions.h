@@ -19,8 +19,10 @@ struct dataset_9_dimensions {
 
     bool operator()(const StarcraftReplayDataset & str1, const StarcraftReplayDataset & str2) const;
     size_t operator()(const StarcraftReplayDataset & str) const;
-    void fit_sample(std::vector<dlib::matrix<double>>& dataset, std::vector<double>&classes, const StarcraftReplayDataset& x);
+    void fit_sample(std::vector<dlib::matrix<double>> &dataset, std::vector<double> &classes,
+                    const StarcraftReplayDataset &x, bool normalize = true);
     void fit_output(std::vector<dlib::matrix<double>>& dataset, const StarcraftReplayDataset& x, const size_t max_classes = 8);
+    void set_label_names(std::vector<std::string>& schema_name);
 };
 
 #endif //TUTORIALS_STARCRAFT9DIMENSIONS_H

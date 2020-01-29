@@ -24,28 +24,29 @@ size_t dataset_full_dimensions::operator()(const StarcraftReplayDataset &str) co
 }
 
 void dataset_full_dimensions::fit_sample(std::vector<dlib::matrix<double>> &dataset, std::vector<double> &classes,
-                                         const StarcraftReplayDataset &x) const {
+                                         const StarcraftReplayDataset &x,
+                                         bool normalize) const {
     dlib::matrix<double> sample(dimensions, 1);
-    sample(0) = x.age / 44.0;
-    sample(1) = x.hours_per_week / 169.0;
-    sample(2) = x.total_hours / 1.0e+06;
-    sample(3) = x.APM / 390.0;
+    sample(0) = x.age / (normalize ? 44.0 : 1.0);
+    sample(1) = x.hours_per_week / (normalize ? 169.0 : 1.0);
+    sample(2) = x.total_hours / (normalize ? 1.0e+06 : 1.0);
+    sample(3) = x.APM / (normalize ? 390.0 : 1.0);
     sample(4) = x.SelectByHotkeys;
     sample(5) = x.AssignToHotkeys;
     sample(6) = x.UniqueHotkeys;
     sample(7) = x.MinimapAttacks;
     sample(8) = x.MinimapRightClicks;
     sample(9) = x.NumberOfPACs;
-    sample(10) = x.GapBetweenPACs / 238.0;
-    sample(11) = x.ActionLatency / 177.0;
-    sample(12) = x.ActionsInPAC / 186.0;
+    sample(10) = x.GapBetweenPACs / (normalize ? 238.0 : 1.0);
+    sample(11) = x.ActionLatency / (normalize ?177.0:1.0);
+    sample(12) = x.ActionsInPAC / (normalize ?186.0:1.0);
     sample(13) = x.TotalMapExplored;
     sample(14) = x.WorkersMade;
     sample(15) = x.UniqueUnitsMade;
     sample(16) = x.ComplexUnitsMade;
     sample(17) = x.ComplexAbilityUsed;
-    sample(18) = x.MaxTimeStamp / 389000.0;
-    assert(max(sample) <= 1.0); // Checking that all the data inputs are in [0,1]
+    sample(18) = x.MaxTimeStamp / (normalize ?389000.0:1.0);
+    assert((!normalize) || max(sample) <= 1.0); // Checking that all the data inputs are in [0,1]
     dataset.emplace_back(sample);
     classes.emplace_back(x.league_index);
 }
@@ -59,4 +60,8 @@ void dataset_full_dimensions::fit_output(std::vector<dlib::matrix<double>> &data
     }
     assert(max(sample) == 1.0);
     dataset.emplace_back(sample);
+}
+
+void dataset_full_dimensions::set_label_names(std::vector<std::string> &schema_name) {
+    schema_name = {"league_index", "age", "hours_per_week", "total_hours", "APM", "SelectByHotkeys", "AssignToHotkeys", "UniqueHotkeys", "MinimapAttacks", "MinimapRightClicks", "NumberOfPACs", "GapBetweenPACs", "ActionLatency", "ActionsInPAC","TotalMapExplored", "WorkersMade",  "UniqueUnitsMade", "ComplexUnitsMade","ComplexAbilityUsed", "MaxTimeStamp" };
 }

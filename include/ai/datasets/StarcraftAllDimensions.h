@@ -15,8 +15,11 @@ struct dataset_full_dimensions {
 
     bool operator()(const StarcraftReplayDataset & lhs, const StarcraftReplayDataset & rhs) const;
     size_t operator()(const StarcraftReplayDataset & str) const;
-    void fit_sample(std::vector<dlib::matrix<double>>& dataset, std::vector<double>&classes, const StarcraftReplayDataset& x) const;
+    void fit_sample(std::vector<dlib::matrix<double>> &dataset, std::vector<double> &classes,
+                    const StarcraftReplayDataset &x,
+                    bool normalize = true) const;
     void fit_output(std::vector<dlib::matrix<double>>& dataset, const StarcraftReplayDataset& x, const size_t max_classes = 8);
+    void set_label_names(std::vector<std::string> &schema_name);
 };
 
 

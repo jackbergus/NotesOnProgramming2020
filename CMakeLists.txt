@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.14)
-
 ## Giving a name to the project
 project(tutorials)
 
@@ -18,9 +17,11 @@ add_subdirectory(submodules/dlib)
 add_subdirectory(submodules/glm)
 add_subdirectory(submodules/libfort)
 
+
 ## Each add_executable provides a binary:
 ## 1) Benchmark of the fibonacci numbers
-add_executable(fibonacci_benchmark src/big_o_notation/lib/fibonacci_no_master_theorem.cpp include/utils/y_combinator.h src/big_o_notation/fibonacci_benchmark.cpp include/big_o_notation/vptree_node.h include/utils/redi.h include/ai/rtree/decision_tree.h src/dm/data_mining.cpp)
+add_executable(fibonacci_benchmark src/big_o_notation/lib/fibonacci_no_master_theorem.cpp include/utils/y_combinator.h src/big_o_notation/fibonacci_benchmark.cpp include/big_o_notation/vptree_node.h include/utils/redi.h include/ai/rtree/decision_tree.h)
+
 
 ## 2) Vantage Point Tree (no library is linked)
 add_executable(vp_tree src/big_o_notation/vantage_point_trees.cpp)
@@ -29,6 +30,7 @@ target_link_libraries(vp_tree)
 # 3) Numeric errors: Some algorithms on collision detections. We're going to use the OpenGL Mathematics library
 add_executable(numeric_error src/big_o_notation/lib/fibonacci_no_master_theorem.cpp src/numeric/numeric_error.cpp src/numeric/structures/IntervalArithmetic.cpp include/numeric/structures/IntervalArithmetic.h src/numeric/structures/Sphere.cpp include/numeric/structures/Sphere.h src/numeric/structures/AABB.cpp include/numeric/structures/AABB.h src/numeric/structures/Vector.cpp include/numeric/structures/Vector.h src/utils/float.cpp src/numeric/lib/FibonacciTotalError.cpp src/numeric/structures/OBB.cpp include/numeric/structures/OBB.h)
 target_link_libraries(numeric_error fort glm::glm)
+
 
 # 4) Seeing some preliminary learning algorithms
 add_executable(learning_1 src/ai/learning.cpp src/ai/lib/mlp/weight.cpp include/ai/mlp/weight.h src/utils/FiniteFunction.cpp include/utils/FiniteFunction.h src/ai/lib/mlp/Perceptron.cpp src/ai/lib/mlp/Layer.cpp include/ai/mlp/Layer.h src/ai/lib/mlp/BackwardPropagationNetwork.cpp include/ai/mlp/BackwardPropagationNetwork.h src/ai/lib/mlp/SinglePerceptron.cpp include/ai/mlp/SinglePerceptron.h src/ai/lib/SupportVectorMachines.cpp include/ai/SupportVectorMachines.h src/utils/permutation.cpp include/utils/permutation.h src/ai/lib/datasets/StarcraftReplayDataset.cpp include/ai/datasets/StarcraftReplayDataset.h src/utils/hashing.cpp include/utils/hashing.h src/ai/lib/datasets/Starcraft9Dimensions.cpp include/ai/datasets/Starcraft9Dimensions.h src/ai/lib/datasets/StarcraftAllDimensions.cpp include/ai/datasets/StarcraftAllDimensions.h include/ai/datasets/training_testing_sets.h src/ai/lib/datasets/DLibSplits.cpp include/ai/datasets/DLibSplits.h src/ai/lib/metrics/class_prediction_distance.cpp include/ai/metrics/class_prediction_distance.h src/ai/lib/rtree/split_field.cpp include/ai/rtree/split_field.h src/ai/lib/metrics/gini_metric.cpp include/ai/metrics/gini_metric.h src/ai/lib/metrics/entropy_metric.cpp include/ai/metrics/entropy_metric.h)

@@ -16,3 +16,6 @@
 [submodule "submodules/fpgrowth"]
 	path = submodules/fpgrowth
 	url = https://github.com/jackbergus/FP-growth.git
+[submodule "submodules/dataset_clashroyale"]
+	path = submodules/dataset_clashroyale
+	url = https://github.com/kekepins/clash-royal-analytics

@@ -1,0 +1,214 @@
+25034 : archers 
+58888 : arrows 
+12917 : arrows baby_dragon 
+12271 : arrows balloon 
+11132 : arrows fireball 
+14556 : arrows hog_rider 
+14648 : arrows minion_horde 
+10339 : arrows minions 
+11371 : arrows prince 
+23376 : arrows skeleton_army 
+21453 : arrows valkyrie 
+14613 : arrows witch 
+16812 : arrows wizard 
+66094 : baby_dragon 
+16436 : baby_dragon balloon 
+17692 : baby_dragon fireball 
+13452 : baby_dragon goblin_barrel 
+16508 : baby_dragon hog_rider 
+13329 : baby_dragon mini_pekka 
+13860 : baby_dragon minion_horde 
+12251 : baby_dragon musketeer 
+18386 : baby_dragon prince 
+30990 : baby_dragon skeleton_army 
+13676 : baby_dragon skeleton_army valkyrie 
+12437 : baby_dragon skeleton_army witch 
+28198 : baby_dragon valkyrie 
+11740 : baby_dragon valkyrie witch 
+25819 : baby_dragon witch 
+20065 : baby_dragon wizard 
+12356 : baby_dragon zap 
+50481 : balloon 
+11767 : balloon fireball 
+15875 : balloon minion_horde 
+11146 : balloon prince 
+10443 : balloon rage 
+23797 : balloon skeleton_army 
+10212 : balloon skeleton_army valkyrie 
+10698 : balloon skeleton_army wizard 
+21415 : balloon valkyrie 
+10337 : balloon valkyrie wizard 
+17734 : balloon witch 
+22720 : balloon wizard 
+20145 : bandit 
+13764 : barbarians 
+39850 : bats 
+10316 : bats skeleton_army 
+13111 : bats valkyrie 
+14346 : bats wizard 
+16878 : bats zap 
+12024 : battle_ram 
+18716 : bomber 
+11333 : clone 
+12408 : dark_prince 
+37568 : electro_wizard 
+10200 : electro_wizard hog_rider 
+10375 : electro_wizard the_log 
+10284 : electro_wizard valkyrie 
+12858 : electro_wizard wizard 
+15541 : electro_wizard zap 
+30806 : elite_barbarians 
+11184 : elite_barbarians minion_horde 
+14237 : elite_barbarians wizard 
+12784 : elite_barbarians zap 
+11673 : elixir_collector 
+23374 : executioner 
+25769 : fire_spirits 
+10048 : fire_spirits zap 
+75949 : fireball 
+12342 : fireball giant 
+10852 : fireball goblin_barrel 
+10922 : fireball goblin_gang 
+24430 : fireball hog_rider 
+10613 : fireball knight 
+12075 : fireball mini_pekka 
+16083 : fireball minion_horde 
+14017 : fireball minions 
+12393 : fireball musketeer 
+12230 : fireball prince 
+23592 : fireball skeleton_army 
+12427 : fireball the_log 
+26195 : fireball valkyrie 
+21570 : fireball witch 
+23000 : fireball wizard 
+25380 : fireball zap 
+16586 : freeze 
+15522 : furnace 
+33106 : giant 
+10550 : giant skeleton_army 
+10366 : giant valkyrie 
+14195 : giant witch 
+10708 : giant zap 
+30435 : giant_skeleton 
+12494 : giant_skeleton skeleton_army 
+10595 : giant_skeleton valkyrie 
+12778 : giant_skeleton witch 
+13455 : giant_skeleton wizard 
+43861 : goblin_barrel 
+11241 : goblin_barrel hog_rider 
+10418 : goblin_barrel minion_horde 
+20903 : goblin_barrel skeleton_army 
+17645 : goblin_barrel valkyrie 
+13390 : goblin_barrel witch 
+14884 : goblin_barrel wizard 
+10593 : goblin_barrel zap 
+38212 : goblin_gang 
+10510 : goblin_gang hog_rider 
+11715 : goblin_gang wizard 
+16536 : goblin_gang zap 
+11431 : goblin_hut 
+23336 : golem 
+75181 : hog_rider 
+11411 : hog_rider knight 
+12200 : hog_rider mini_pekka 
+16182 : hog_rider minion_horde 
+12121 : hog_rider minions 
+11960 : hog_rider musketeer 
+11383 : hog_rider prince 
+25716 : hog_rider skeleton_army 
+10261 : hog_rider skeleton_army valkyrie 
+10036 : hog_rider skeleton_army wizard 
+14207 : hog_rider the_log 
+29429 : hog_rider valkyrie 
+12047 : hog_rider valkyrie wizard 
+19543 : hog_rider witch 
+26930 : hog_rider wizard 
+27982 : hog_rider zap 
+12310 : hunter 
+18050 : ice_wizard 
+32291 : inferno_dragon 
+11423 : inferno_dragon wizard 
+12280 : inferno_dragon zap 
+22520 : inferno_tower 
+33720 : knight 
+11764 : knight zap 
+30510 : lumberjack 
+13277 : lumberjack wizard 
+11035 : lumberjack zap 
+25746 : mega_knight 
+10354 : mega_knight wizard 
+19104 : mega_minion 
+27743 : miner 
+10780 : miner zap 
+40004 : mini_pekka 
+10204 : mini_pekka prince 
+14060 : mini_pekka skeleton_army 
+14088 : mini_pekka valkyrie 
+13758 : mini_pekka witch 
+12363 : mini_pekka wizard 
+11287 : mini_pekka zap 
+65131 : minion_horde 
+14012 : minion_horde prince 
+13384 : minion_horde rage 
+29145 : minion_horde skeleton_army 
+10384 : minion_horde skeleton_army valkyrie 
+14719 : minion_horde skeleton_army wizard 
+22358 : minion_horde valkyrie 
+12057 : minion_horde valkyrie wizard 
+19066 : minion_horde witch 
+32563 : minion_horde wizard 
+12832 : minion_horde zap 
+40530 : minions 
+12391 : minions skeleton_army 
+12880 : minions valkyrie 
+10067 : minions witch 
+16158 : minions zap 
+14456 : mirror 
+36660 : musketeer 
+14348 : musketeer skeleton_army 
+16073 : musketeer valkyrie 
+12707 : musketeer witch 
+10912 : night_witch 
+33895 : pekka 
+17169 : pekka wizard 
+15881 : pekka zap 
+16625 : poison 
+48843 : prince 
+22729 : prince skeleton_army 
+18862 : prince valkyrie 
+19389 : prince witch 
+17759 : prince wizard 
+26769 : princess 
+33397 : rage 
+12495 : rage skeleton_army 
+11922 : rage valkyrie 
+11663 : rage witch 
+17738 : rage wizard 
+20719 : rocket 
+11640 : royal_ghost 
+94641 : skeleton_army 
+37721 : skeleton_army valkyrie 
+13088 : skeleton_army valkyrie witch 
+17409 : skeleton_army valkyrie wizard 
+30662 : skeleton_army witch 
+11070 : skeleton_army witch wizard 
+40182 : skeleton_army wizard 
+21393 : skeleton_army zap 
+22578 : spear_goblins 
+11313 : tesla 
+46973 : the_log 
+11214 : the_log valkyrie 
+15573 : the_log wizard 
+14339 : the_log zap 
+17865 : tornado 
+98292 : valkyrie 
+33800 : valkyrie witch 
+13551 : valkyrie witch wizard 
+43158 : valkyrie wizard 
+25799 : valkyrie zap 
+79045 : witch 
+28853 : witch wizard 
+16307 : witch zap 
+102499 : wizard 
+27803 : wizard zap 
+89650 : zap 

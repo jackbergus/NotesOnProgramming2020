@@ -12,6 +12,7 @@ include_directories(submodules/fpgrowth/include)
 
 ## I want to use the C++17 standard, forsooth!
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 ## Including the libraries via subdirectories: in fact, this is the most cross-platform way as you might get now...
 add_subdirectory(submodules/dlib)

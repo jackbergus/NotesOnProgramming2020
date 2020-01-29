@@ -7,6 +7,7 @@
 
 #include <string>
 #include "DeckItem.h"
+#include <fptree.hpp>
 
 /**
  * Describing a player participating in a match
@@ -20,6 +21,16 @@ struct ClashRoyalePlayer {
     DeckItem    cards[8];           ///< Player's deck at the moment of the battle
 
     friend std::ostream &operator<<(std::ostream &os, const ClashRoyalePlayer &player);
+
+    /**
+     * Represents the deck as a transaction that can be used for the FPGrowth algorithm
+     * @return
+     */
+    Transaction<std::string> asFPTransaction() const {
+        Transaction<std::string> toReturn;
+        for (size_t i = 0; i<8; i++) toReturn.emplace_back(cards[i].name);
+        return toReturn;
+    }
 };
 
 

@@ -8,6 +8,7 @@ include_directories(submodules/csv)
 include_directories(submodules/libfort/lib)
 include_directories(submodules/glm/glm)
 include_directories(submodules/rang/include)
+include_directories(submodules/fpgrowth/include)
 
 ## I want to use the C++17 standard, forsooth!
 set(CMAKE_CXX_STANDARD 17)

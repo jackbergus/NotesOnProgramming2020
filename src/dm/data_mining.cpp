@@ -24,6 +24,4 @@ int main(void) {
             continueReading = false;                            // Otherwise, fail and stop reading
         }
     } while (continueReading);
-
-
 }

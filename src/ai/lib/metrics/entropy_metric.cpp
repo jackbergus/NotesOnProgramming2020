@@ -3,6 +3,9 @@
 //
 
 #include <cmath>
+#ifdef  _WIN64
+#include <limits>		// MSVC requires limits to have the numeric setup
+#endif
 #include "ai/metrics/entropy_metric.h"
 
 static inline double xlogeps(double x) {

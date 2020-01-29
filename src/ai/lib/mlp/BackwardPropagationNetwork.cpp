@@ -101,10 +101,11 @@ void BackwardPropagationNetwork::updateWeight(double learningRate, double moment
 double BackwardPropagationNetwork::train(struct finite_function &f, size_t iterationNumber, const double learningRate,
                                          const double momentum) {
     size_t epoch = 0;
+	double RMSE_ERROR;
     while (epoch < iterationNumber)
     {
         // For all the elements in the finite function f
-        double RMSE_ERROR = 0.0;
+        RMSE_ERROR = 0.0;
         size_t N = f.finite_function.size();
         for (int i = 0; i < N; i++) {
             std::vector<double> result = compute(f.finite_function[i].input);
@@ -126,6 +127,8 @@ double BackwardPropagationNetwork::train(struct finite_function &f, size_t itera
             epoch = 0;
         }
     }
+
+	return RMSE_ERROR;
 }
 
 void BackwardPropagationNetwork::finalize() {

@@ -19,3 +19,6 @@
 [submodule "submodules/git"]
 	path = submodules/git
 	url = https://github.com/jackbergus/fast-cpp-csv-parser.git
+[submodule "submodules/csv"]
+	path = submodules/csv
+	url = https://github.com/jackbergus/fast-cpp-csv-parser.git

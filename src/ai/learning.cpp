@@ -15,7 +15,7 @@
 #include <ai/mlp/BackwardPropagationNetwork.h>
 #include "ai/mlp/SinglePerceptron.h"
 #include "ai/SupportVectorMachines.h"
-#include "utils/permutation.h"
+#include "utils/numeric/permutation.h"
 #include "ai/metrics/class_prediction_distance.h"
 #include <ai/datasets/DLibSplits.h>
 

@@ -2,7 +2,7 @@
 // Created by giacomo on 28/01/2020.
 //
 
-#include "utils/permutation.h"
+#include "utils/numeric/permutation.h"
 
 int getNum(std::vector<int> &v) {
     // Size of the vector

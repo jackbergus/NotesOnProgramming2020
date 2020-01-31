@@ -13,110 +13,14 @@
 #include <sstream>
 
 #include <set>
+#include <cmath>
+#include <dm/DataMiningMetric.h>
+#include <dm/RulesFromFrequentItemset.h>
 
 extern "C" {
     #include <unistd.h>
 }
 
-/**
- * Defining an ordering over vectors following the lexicographical order
- * @tparam T    Type associated to the container
- * @tparam U    Type associated to the content
- */
-ForAll2(T,U) struct LexicographicalOrder {
-    std::less<U> lesscmp;   // Default comparator for the content
-    bool operator()(const T& lhs, const T& rhs) const {
-        return compare(lhs, rhs, 0);
-    }
-private:
-    bool compare(const T& lhs, const T& rhs, size_t idx) const {
-        if (idx == lhs.size()) {
-            return !(idx == rhs.size());
-        } else {
-            if (idx == rhs.size()) {
-                return false;
-            } else {
-                if (lesscmp(lhs[idx], rhs[idx])) {
-                    return true;
-                } else if (lesscmp(rhs[idx], lhs[idx])) {
-                    return false;
-                } else {
-                    return compare(lhs, rhs, idx+1);
-                }
-            }
-        }
-    }
-};
-
-using STLexic = struct LexicographicalOrder<Transaction<std::string>, std::string>;
-using VTLexic = struct LexicographicalOrder<std::vector<std::string>, std::string>;
-using DeckSet = std::set<Transaction<std::string>, STLexic>;
-
-template <typename T> bool IsSubset(std::vector<T> A, std::vector<T> B) {
-    std::sort(A.begin(), A.end());
-    std::sort(B.begin(), B.end());
-    return std::includes(A.begin(), A.end(), B.begin(), B.end());
-}
-
-struct Rule {
-        std::vector<std::string> pred;
-        std::vector<std::string> succ;
-};
-
-struct FunctionEntrypoint {
-    // Creating the support function used for the
-    std::map<std::vector<std::string>, unsigned long, VTLexic> f;
-    double sumAll = 0.0;
-
-    FunctionEntrypoint(const std::set<Pattern<std::string>>& S) {
-        for (auto x : S) {
-            std::vector<std::string> v{};
-            v.reserve(x.first.size());
-            for (auto it = x.first.begin(); it != x.first.end(); ) {
-                v.push_back(std::move(x.first.extract(it++).value()));
-            }
-            f[v] = x.second;
-            sumAll += x.second;
-        }
-    }
-
-    size_t support(std::vector<std::string>& i) {
-        size_t sum = 0;
-        for (auto it = f.begin(); it != f.end(); it++) {
-            if (IsSubset(it->first, i)) {
-                sum += it->second;
-            }
-        }
-        return sum;
-    }
-
-    double support(Rule& r) {
-        std::vector<std::string> unione;
-        for (const std::string& x: r.pred) unione.emplace_back(x);
-        for (const std::string& x: r.succ) unione.emplace_back(x);
-        std::sort(unione.begin(), unione.end());
-        unione.erase(std::unique(unione.begin(), unione.end()), unione.end());
-        return ((double)support(unione)) / sumAll;
-    }
-
-    double confidence(Rule& r) {
-        std::vector<std::string> unione;
-        for (const std::string& x: r.pred) unione.emplace_back(x);
-        for (const std::string& x: r.succ) unione.emplace_back(x);
-        std::sort(unione.begin(), unione.end());
-        unione.erase(std::unique(unione.begin(), unione.end()), unione.end());
-        return ((double)support(unione))/((double)support(r.pred));
-    }
-
-    double lift(Rule& r) {
-        std::vector<std::string> unione;
-        for (const std::string& x: r.pred) unione.emplace_back(x);
-        for (const std::string& x: r.succ) unione.emplace_back(x);
-        std::sort(unione.begin(), unione.end());
-        unione.erase(std::unique(unione.begin(), unione.end()), unione.end());
-        return ((double)support(unione))/(((double)support(r.pred))*((double)support(r.succ)));
-    }
-};
 
 int main(void) {
     // Loading the Clash Royale dataset. Even though we have more than 200 dimensions, we are only interested in a few of them
@@ -133,6 +37,10 @@ int main(void) {
 
         std::vector<Transaction<std::string>> transactions;
         {
+
+            using STLexic = struct LexicographicalOrder<Transaction<std::string>, std::string>;
+            using DeckSet = std::set<Transaction<std::string>, STLexic>;
+
             DeckSet winning_deck, losing_deck;
 
             // Reading all the elements
@@ -220,8 +128,23 @@ int main(void) {
         }
     }
 
-    std::cout << patterns.size() << " patterns have been mined! " << std::endl;
 
+    /**
+     * Initializing the scoring functions
+     */
+    DataMiningMetrics counter{patterns};
+    size_t count;
 
+    for (const Pattern<std::string>& pattern : patterns) {
+        if (pattern.first.size() <= 1) continue;                            // I cannot extract a good pattern if we have only one element.
 
+        RulesFromFrequentItemset rffi{counter};
+        for (auto& result: rffi.generate_hypotheses(pattern)) {
+            std::cout  << result << std::endl;
+            count++;
+        }
+    }
+
+    std::cout << std::endl << "~ We mined " << patterns.size() << " patterns " << std::endl;
+    std::cout << "~ from which we generated " <<  count << " rules!" << std::endl;
 }

@@ -8,7 +8,7 @@
 #include <unordered_set>
 #include <iostream>
 #include <csv.h>
-#include <utils/permutation.h>
+#include <utils/numeric/permutation.h>
 #include "DLibSplits.h"
 #include "StarcraftReplayDataset.h"
 

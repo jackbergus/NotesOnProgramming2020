@@ -2,7 +2,7 @@
 // Created by giacomo on 06/12/2019.
 //
 
-#include <utils/y_combinator.h>
+#include <utils/functional/y_combinator.h>
 #include "big_o_notation/fibonacci_no_master_theorem.h"
 
 fibonacci_no_master_theorem::fibonacci_no_master_theorem() {

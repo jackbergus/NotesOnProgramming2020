@@ -7,7 +7,7 @@
 
 
 #include <ai/datasets/StarcraftReplayDataset.h>
-#include <utils/hashing.h>
+#include <utils/numeric/hashing.h>
 #include <dlib/matrix.h>
 
 struct dataset_full_dimensions {

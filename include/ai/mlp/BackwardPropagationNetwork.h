@@ -7,7 +7,7 @@
 
 
 #include <ai/mlp/Layer.h>
-#include <utils/FiniteFunction.h>
+#include <utils/functional/FiniteFunction.h>
 #include <iostream>
 
 struct BackwardPropagationNetwork {

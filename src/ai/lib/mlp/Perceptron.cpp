@@ -4,7 +4,7 @@
 
 #include <algorithm>
 #include "ai/mlp/Perceptron.h"
-#include "utils/Functionals.h"
+#include "utils/functional/Functionals.h"
 
 #define SIGMOID(x)          ((1.0) / (1.0+ std::exp(-(x))))
 

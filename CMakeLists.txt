@@ -22,7 +22,7 @@ add_subdirectory(submodules/libfort)
 
 ## Each add_executable provides a binary:
 ## 1) Benchmark of the fibonacci numbers
-add_executable(fibonacci_benchmark src/big_o_notation/lib/fibonacci_no_master_theorem.cpp include/utils/y_combinator.h src/big_o_notation/fibonacci_benchmark.cpp include/big_o_notation/vptree_node.h include/utils/redi.h include/ai/rtree/decision_tree.h)
+add_executable(fibonacci_benchmark src/big_o_notation/lib/fibonacci_no_master_theorem.cpp include/utils/functional/y_combinator.h src/big_o_notation/fibonacci_benchmark.cpp include/big_o_notation/vptree_node.h include/ai/rtree/decision_tree.h)
 
 
 ## 2) Vantage Point Tree (no library is linked)
@@ -35,11 +35,11 @@ target_link_libraries(numeric_error fort glm::glm)
 
 
 # 4) Seeing some preliminary learning algorithms
-add_executable(learning_1 src/ai/learning.cpp src/ai/lib/mlp/weight.cpp include/ai/mlp/weight.h src/utils/FiniteFunction.cpp include/utils/FiniteFunction.h src/ai/lib/mlp/Perceptron.cpp src/ai/lib/mlp/Layer.cpp include/ai/mlp/Layer.h src/ai/lib/mlp/BackwardPropagationNetwork.cpp include/ai/mlp/BackwardPropagationNetwork.h src/ai/lib/mlp/SinglePerceptron.cpp include/ai/mlp/SinglePerceptron.h src/ai/lib/SupportVectorMachines.cpp include/ai/SupportVectorMachines.h src/utils/permutation.cpp include/utils/permutation.h src/ai/lib/datasets/StarcraftReplayDataset.cpp include/ai/datasets/StarcraftReplayDataset.h src/utils/hashing.cpp include/utils/hashing.h src/ai/lib/datasets/Starcraft9Dimensions.cpp include/ai/datasets/Starcraft9Dimensions.h src/ai/lib/datasets/StarcraftAllDimensions.cpp include/ai/datasets/StarcraftAllDimensions.h include/ai/datasets/training_testing_sets.h src/ai/lib/datasets/DLibSplits.cpp include/ai/datasets/DLibSplits.h src/ai/lib/metrics/class_prediction_distance.cpp include/ai/metrics/class_prediction_distance.h src/ai/lib/rtree/split_field.cpp include/ai/rtree/split_field.h src/ai/lib/metrics/gini_metric.cpp include/ai/metrics/gini_metric.h src/ai/lib/metrics/entropy_metric.cpp include/ai/metrics/entropy_metric.h)
+add_executable(learning_1 src/ai/learning.cpp src/ai/lib/mlp/weight.cpp include/ai/mlp/weight.h src/utils/FiniteFunction.cpp include/utils/functional/FiniteFunction.h src/ai/lib/mlp/Perceptron.cpp src/ai/lib/mlp/Layer.cpp include/ai/mlp/Layer.h src/ai/lib/mlp/BackwardPropagationNetwork.cpp include/ai/mlp/BackwardPropagationNetwork.h src/ai/lib/mlp/SinglePerceptron.cpp include/ai/mlp/SinglePerceptron.h src/ai/lib/SupportVectorMachines.cpp include/ai/SupportVectorMachines.h src/utils/permutation.cpp include/utils/numeric/permutation.h src/ai/lib/datasets/StarcraftReplayDataset.cpp include/ai/datasets/StarcraftReplayDataset.h src/utils/hashing.cpp include/utils/numeric/hashing.h src/ai/lib/datasets/Starcraft9Dimensions.cpp include/ai/datasets/Starcraft9Dimensions.h src/ai/lib/datasets/StarcraftAllDimensions.cpp include/ai/datasets/StarcraftAllDimensions.h include/ai/datasets/training_testing_sets.h src/ai/lib/datasets/DLibSplits.cpp include/ai/datasets/DLibSplits.h src/ai/lib/metrics/class_prediction_distance.cpp include/ai/metrics/class_prediction_distance.h src/ai/lib/rtree/split_field.cpp include/ai/rtree/split_field.h src/ai/lib/metrics/gini_metric.cpp include/ai/metrics/gini_metric.h src/ai/lib/metrics/entropy_metric.cpp include/ai/metrics/entropy_metric.h)
 target_link_libraries(learning_1 dlib)
 
 # 5) Last, seeing some data mining algorithms
 ## In order to do so, I need to find the Thread library in a cross platform way
 find_package(Threads REQUIRED)
-add_executable(data_mining_2 src/dm/data_mining.cpp src/dm/lib/dataset/DeckItem.cpp include/dm/dataset/DeckItem.h src/dm/lib/dataset/ClashRoyalePlayer.cpp include/dm/dataset/ClashRoyalePlayer.h src/dm/lib/dataset/ClashRoyaleDatasetMatch.cpp include/dm/dataset/ClashRoyaleDatasetMatch.h)
+add_executable(data_mining_2 src/dm/data_mining.cpp src/dm/lib/dataset/DeckItem.cpp include/dm/dataset/DeckItem.h src/dm/lib/dataset/ClashRoyalePlayer.cpp include/dm/dataset/ClashRoyalePlayer.h src/dm/lib/dataset/ClashRoyaleDatasetMatch.cpp include/dm/dataset/ClashRoyaleDatasetMatch.h src/dm/lib/Rule.cpp include/dm/Rule.h src/dm/lib/DataMiningMetric.cpp include/dm/DataMiningMetric.h src/dm/lib/RulesFromFrequentItemset.cpp include/dm/RulesFromFrequentItemset.h)
 target_link_libraries(data_mining_2 Threads::Threads)

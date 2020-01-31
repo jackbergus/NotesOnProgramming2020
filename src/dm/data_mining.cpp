@@ -17,9 +17,17 @@
 #include <dm/DataMiningMetric.h>
 #include <dm/RulesFromFrequentItemset.h>
 
+
+#ifdef _WIN64
+#ifndef F_OK
+#define F_OK		(00)
+#endif 
+#include <iterator>						//inserter
+#else
 extern "C" {
-    #include <unistd.h>
+#include <unistd.h>
 }
+#endif
 
 
 int main(void) {
@@ -38,8 +46,7 @@ int main(void) {
         std::vector<Transaction<std::string>> transactions;
         {
 
-            using STLexic = struct LexicographicalOrder<Transaction<std::string>, std::string>;
-            using DeckSet = std::set<Transaction<std::string>, STLexic>;
+            using DeckSet = std::set<Transaction<std::string>, VTLexic>;
 
             DeckSet winning_deck, losing_deck;
 
@@ -133,7 +140,7 @@ int main(void) {
      * Initializing the scoring functions
      */
     DataMiningMetrics counter{patterns};
-    size_t count;
+    size_t count = 0;
 
     for (const Pattern<std::string>& pattern : patterns) {
         if (pattern.first.size() <= 1) continue;                            // I cannot extract a good pattern if we have only one element.

@@ -9,6 +9,7 @@
 #include <string>
 #include <dm/dataset/ClashRoyalePlayer.h>
 #include <optional>
+#include <limits>		// for csv.h and numeric_limtis
 #include <csv.h>
 
 /**

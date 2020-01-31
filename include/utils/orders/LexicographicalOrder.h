@@ -5,7 +5,7 @@
 #ifndef TUTORIALS_LEXICOGRAPHICALORDER_H
 #define TUTORIALS_LEXICOGRAPHICALORDER_H
 
-#include <fptree.hpp>       // ForAll2
+#define ForAll2(T,U)       template <typename T, typename U>
 
 /**
  * Defining an ordering over vectors following the lexicographical order

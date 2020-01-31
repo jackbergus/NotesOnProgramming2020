@@ -12,7 +12,8 @@
 #include <dm/Rule.h>
 #include <utils/orders/LexicographicalOrder.h>
 
-using VTLexic = struct LexicographicalOrder<std::vector<std::string>, std::string>;
+
+using VTLexic = LexicographicalOrder<std::vector<std::string>, std::string>;
 
 /**
  * This struct stores the association itemset/number_of_occurrences returned from the FPGrowth algorithm and returns

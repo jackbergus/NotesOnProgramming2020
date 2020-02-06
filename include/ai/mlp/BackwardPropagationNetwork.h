@@ -25,7 +25,7 @@ struct BackwardPropagationNetwork {
 
     BackwardPropagationNetwork(size_t inputSize, const std::vector<size_t> &layersSize, bool useRE = false);
 
-    std::vector<double> compute(std::vector<double> input/*, std::vector<std::vector<double>>& inputInAllLayers*/);
+    std::vector<double> compute(std::vector<double> &input/*, std::vector<std::vector<double>>& inputInAllLayers*/);
 
     void reset();
 

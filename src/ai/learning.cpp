@@ -218,6 +218,10 @@ void multi_rtree_train() {
 }
 
 int main(void) {
+
+
+
+
     // A) Learning the And, Or and Xor function
     // Neural network simple examples
     training_or_perceptron();

@@ -31,10 +31,13 @@ void train_xor_bbn() {
     ff.extendMap(0, {0, 0});
     nn.train(ff);
 
+    std::cout << nn << std::endl;
+
     std::cout << nn.compute(ff.finite_function[0].input)[0] << std::endl;
     std::cout << nn.compute(ff.finite_function[1].input)[0] << std::endl;
     std::cout << nn.compute(ff.finite_function[2].input)[0] << std::endl;
     std::cout << nn.compute(ff.finite_function[3].input)[0] << std::endl;
+    exit(1);
 }
 
 BackwardPropagationNetwork::BackwardPropagationNetwork() {}
@@ -64,7 +67,7 @@ BackwardPropagationNetwork::BackwardPropagationNetwork(size_t inputSize, const s
 
 }
 
-std::vector<double> BackwardPropagationNetwork::compute(std::vector<double> input) {
+std::vector<double> BackwardPropagationNetwork::compute(std::vector<double> &input) {
 
     // Input for the first layer
     std::vector<double> currentInput = input;

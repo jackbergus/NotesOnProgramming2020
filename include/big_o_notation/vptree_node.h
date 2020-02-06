@@ -91,44 +91,63 @@ template <typename Point, typename DistanceFunction> struct vp_tree {
     void topk1Search(size_t id) {
         found.clear();
         tau    = std::numeric_limits<double>::max();
+        std::cout << "Id. pt = " << tree[id].pt << std::endl;
         lookUpNearsetTo(0, id);
     }
 
 private:
-    void lookUpNearsetTo(size_t root_id, size_t id) {
+    void lookUpNearsetTo(size_t root_id, size_t id, size_t depth = 0) {
         //std::cout << root_id << std::endl;
         auto node = tree[id];
         auto root = tree[root_id];
         double rootRadius = tree[root_id].radius;
-        double dist = ker.distance(tree[root_id].pt, node.pt);
+        double dist = ker.distance(root.pt, node.pt);
 
+        std::cout << "---------" << std::endl;
+        std::cout << std::string(depth, '.') <<dist << "=\\delta(" << root.pt << "," << node.pt << ")" << std::endl;
+        std::cout << std::string(depth, '.') << "Root. Pt = " << root.pt << " radius = " << rootRadius << " rootDistance = " << dist << std::endl;
         if ((root_id != id)) { // do not add the same object
             // If I find a better object, then discard all the previous ones, and set the current one
             if (definitelyLessThan(dist,tau)) {
                 found.clear();
                 found.emplace_back(root_id);
+                std::cout << std::string(depth, '.') << "New Tau pt: " << root.pt << std::endl;
+                std::cout << std::string(depth, '.') << "(tau=dist): " << dist << std::endl;
                 tau = dist;
             } else
                 // Otherwise, if they are very similar, then I could add this other one too
                 if (approximatelyEqual(dist, tau)) {
                 found.emplace_back(root_id);
                 tau = std::min(dist, tau);
+                std::cout << std::string(depth, '.') << "Old Tau " << tau << "=" << dist << std::endl;
             }
         }
 
         // Continuing with the traversal depending on the distance from the root
         if (dist < rootRadius) {
-            if (root.leftChild != std::numeric_limits<unsigned int>::max() && dist - tau <= rootRadius)
-                lookUpNearsetTo(root.leftChild, id);
+            std::cout << std::string(depth, '.')  << dist << '<' << rootRadius << std::endl;
+            if (root.leftChild != std::numeric_limits<unsigned int>::max() && dist - tau <= rootRadius) {
+                std::cout << std::string(depth, '.') << dist << '-' << tau << "<=" << rootRadius <<  std::endl;
+                lookUpNearsetTo(root.leftChild, id, depth+1);
+            }
 
-            if (root.rightChild != std::numeric_limits<unsigned int>::max() && dist + tau >= rootRadius)
-                lookUpNearsetTo(root.rightChild, id);
+            // At this stage, the tau value might be updated from the previous recursive call
+            if (root.rightChild != std::numeric_limits<unsigned int>::max() && dist + tau >= rootRadius) {
+                std::cout << std::string(depth, '.') << dist << '+' << tau << ">=" << rootRadius <<  std::endl;
+                lookUpNearsetTo(root.rightChild, id, depth+1);
+            }
         } else {
-            if (root.rightChild != std::numeric_limits<unsigned int>::max() && dist + tau >= rootRadius)
-                lookUpNearsetTo(root.rightChild, id);
+            std::cout << std::string(depth, '.') << dist << '<' << rootRadius << std::endl;
+            if (root.rightChild != std::numeric_limits<unsigned int>::max() && dist + tau >= rootRadius) {
+                std::cout << std::string(depth, '.') << dist << '+' << tau << ">=" << rootRadius <<  std::endl;
+                lookUpNearsetTo(root.rightChild, id, depth+1);
+            }
 
-            if (root.leftChild != std::numeric_limits<unsigned int>::max() && dist - tau <= rootRadius)
-                lookUpNearsetTo(root.leftChild, id);
+            // At this stage, the tau value might be updated from the previous recursive call
+            if (root.leftChild != std::numeric_limits<unsigned int>::max() && dist - tau <= rootRadius) {
+                std::cout << std::string(depth, '.') << dist << '-' << tau << "<=" << rootRadius <<  std::endl;
+                lookUpNearsetTo(root.leftChild, id, depth+1);
+            }
         }
     }
 

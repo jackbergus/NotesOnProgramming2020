@@ -8,8 +8,8 @@
 
 #define SIGMOID(x)          ((1.0) / (1.0+ std::exp(-(x))))
 
-static inline double gradient(double input, double derivative) { return (SIGMOID(input) * derivative); }
-static inline double gradient(double derivative)               { return (SIGMOID(1.0) * derivative); }
+static inline double gradient(double input, double derivative) { return (input * derivative); }
+static inline double gradient(double derivative)               { return (derivative); }
 
 std::ostream &operator<<(std::ostream &os, const Perceptron &perceptron) {
     os << "weights: " << perceptron.weights << " theta: " << perceptron.theta << " theta_gradient: "

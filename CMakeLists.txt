@@ -41,8 +41,5 @@ target_link_libraries(learning_1 dlib)
 # 5) Last, seeing some data mining algorithms
 ## In order to do so, I need to find the Thread library in a cross platform way
 find_package(Threads REQUIRED)
-add_executable(data_mining_2 src/dm/data_mining.cpp src/dm/lib/dataset/DeckItem.cpp include/dm/dataset/DeckItem.h src/dm/lib/dataset/ClashRoyalePlayer.cpp include/dm/dataset/ClashRoyalePlayer.h src/dm/lib/dataset/ClashRoyaleDatasetMatch.cpp include/dm/dataset/ClashRoyaleDatasetMatch.h src/dm/lib/Rule.cpp include/dm/Rule.h src/dm/lib/DataMiningMetric.cpp include/dm/DataMiningMetric.h src/dm/lib/RulesFromFrequentItemset.cpp include/dm/RulesFromFrequentItemset.h testing.cpp)
+add_executable(data_mining_2 src/dm/data_mining.cpp src/dm/lib/dataset/DeckItem.cpp include/dm/dataset/DeckItem.h src/dm/lib/dataset/ClashRoyalePlayer.cpp include/dm/dataset/ClashRoyalePlayer.h src/dm/lib/dataset/ClashRoyaleDatasetMatch.cpp include/dm/dataset/ClashRoyaleDatasetMatch.h src/dm/lib/Rule.cpp include/dm/Rule.h src/dm/lib/DataMiningMetric.cpp include/dm/DataMiningMetric.h src/dm/lib/RulesFromFrequentItemset.cpp include/dm/RulesFromFrequentItemset.h)
 target_link_libraries(data_mining_2 Threads::Threads)
-
-
-add_executable(testing testing.cpp)

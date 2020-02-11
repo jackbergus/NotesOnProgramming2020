@@ -6,7 +6,7 @@
 
 #include <cmath>
 
-double gini_metric::metric_root(double pos, double neg) const { return 1.0; }
+double gini_metric::metric_root(double pos, double neg) const { return 1.0 - std::pow(pos, 2) - std::pow(neg, 2); }
 
 double gini_metric::subtree_part(double freq_posLeft) { return 1.0 - std::pow(freq_posLeft, 2) - std::pow(1.0 - freq_posLeft, 2); }
 

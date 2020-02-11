@@ -167,8 +167,8 @@ private:
 
         double maxGain = -std::numeric_limits<double>::max();
         double posRoot = 0.0;
-        double negRoot = 0.0;
-        double entropyRoot = 0.0;
+        double negRoot;
+        double entropyRoot;
 
         // Getting all the possible values for the given field name
         for (metric_row& r : rows) {
@@ -214,7 +214,7 @@ private:
             field.is_equal = true;
         }
 
-        entropyRoot = functions.metric_root(posRoot, negRoot); ///1.0; //- posRoot * xlogeps(posRoot) - negRoot * xlogeps(negRoot);
+        entropyRoot = functions.metric_root(posRoot, negRoot);
 
         // Computing the entropy for each possible value (in a discrete way)
         //std::cout << entropy_precompute.size() << std::endl;
@@ -232,11 +232,6 @@ private:
                 ((it2->first < it->first) ? sizeLeft : sizeRight) += frequency[it2->first];
             }
 
-#if 0
-            if ((sizeLeft == 0.0) || (sizeRight == 0.0))
-                continue;
-#endif
-
             // Getting the frequencies for the
             double freq_posLeft = sizeLeft == 0 ? 0.0 :  positiveLeft / sizeLeft;
             double eLeft_eps = functions.subtree_part(freq_posLeft);
@@ -245,7 +240,7 @@ private:
             double eRight_eps = functions.subtree_part(freq_posRight);
 
             double entropyPosterior =
-                    functions.posterior(sizeLeft, rows.size(), freq_posLeft, freq_posRight); ///(sizeLeft / ((double)rows.size())) * eLeft_eps + (sizeRight / ((double)rows.size())) * eRight_eps; //;
+                    functions.posterior(sizeLeft, rows.size(), freq_posLeft, freq_posRight);
             double information_gain = entropyRoot - entropyPosterior;
 
             //std::cout << entropy << std::endl;

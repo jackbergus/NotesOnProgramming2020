@@ -37,7 +37,6 @@ void train_xor_bbn() {
     std::cout << nn.compute(ff.finite_function[1].input)[0] << std::endl;
     std::cout << nn.compute(ff.finite_function[2].input)[0] << std::endl;
     std::cout << nn.compute(ff.finite_function[3].input)[0] << std::endl;
-    exit(1);
 }
 
 BackwardPropagationNetwork::BackwardPropagationNetwork() {}

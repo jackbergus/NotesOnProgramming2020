@@ -8,7 +8,7 @@
 
 
 struct gini_metric {
-    double metric_root(double pos, double neg) const;
+    double metric_root(double posRoot, double negRoot) const;
     double subtree_part(double freq_posLeft);
     double posterior(double sizeLeft, double sizeTotal, double posLeft, double posRight);
 };

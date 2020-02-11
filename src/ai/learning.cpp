@@ -181,20 +181,21 @@ void multi_svm_train(const DLib_Splits& splits, const unsigned numberClasses, co
 #include <ai/datasets/StarcraftAllDimensions.h>
 #include <ai/metrics/entropy_metric.h>
 #include <ai/rtree/decision_tree.h>
+#include <ai/metrics/gini_metric.h>
 
-
-void multi_rtree_train() {
+template <typename Metric> void multi_rtree_train() {
     DLib_Splits splits;
     const std::pair<const size_t, const size_t> &info = generateSplit<dataset_full_dimensions>("data/starcraft.csv", splits,
                                                                                                false, 0.7);
 
     // Training the model one class against the other
-    std::vector<struct decision_tree<entropy_metric>> classifiers;
+    using CLS = std::vector<decision_tree<Metric>>;
+    CLS classifiers;
     for (double classe = 1.0; classe <= 8.0; classe++) {
         std::cout << classe << std::endl;
-        struct decision_tree<entropy_metric> predict_class(splits, classe);
+        struct decision_tree<Metric> predict_class(splits, classe);
         predict_class.expand(5);
-        classifiers.insert(classifiers.begin(), predict_class);
+        classifiers.emplace_back(predict_class);
         std::cout << std::endl << std::endl;
     }
 
@@ -202,7 +203,7 @@ void multi_rtree_train() {
     double distance = 0.0;
     for (size_t i = 0; i<N; i++) {
         double ithDistance = 0.0;
-        std::pair<double, std::set<double>> result = decision_tree<entropy_metric>::classify<entropy_metric>(classifiers, splits.testing_input[i]);
+        std::pair<double, std::set<double>> result = decision_tree<Metric>::template classify<Metric>(classifiers, splits.testing_input[i]);
         ithDistance = class_prediction_distance(splits.testing_labels[i], result.second);
         // normalize the distance
         ithDistance = ithDistance / (ithDistance+1.0);
@@ -218,10 +219,6 @@ void multi_rtree_train() {
 }
 
 int main(void) {
-
-
-
-
     // A) Learning the And, Or and Xor function
     // Neural network simple examples
     training_or_perceptron();
@@ -258,6 +255,6 @@ int main(void) {
     std::cout << std::endl << std::endl;
 
     std::cout << "Multi RTree Training (Need to reload a non-normalized dataset)" << std::endl;
-    multi_rtree_train();
+    multi_rtree_train<entropy_metric>();
     std::cout << std::endl << std::endl;
 }

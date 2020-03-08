@@ -40,7 +40,7 @@ protected:
 public:
     RulesFromFrequentItemset(DataMiningMetrics &scorer);
 
-    std::set<Rule> generate_hypotheses(const Pattern<std::string>& pattern);
+    std::unordered_set<Rule> generate_hypotheses(const Pattern<std::string>& pattern);
 };
 
 

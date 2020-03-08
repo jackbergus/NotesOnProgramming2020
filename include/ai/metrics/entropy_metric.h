@@ -8,8 +8,7 @@
 
 
 struct entropy_metric {
-    double metric_root(double posRoot, double negRoot) const;
-    double subtree_part(double freq_posLeft);
+    double node_iota(double freq_posLeft);
     double posterior(double sizeLeft, double sizeTotal, double posLeft, double posRight);
 };
 

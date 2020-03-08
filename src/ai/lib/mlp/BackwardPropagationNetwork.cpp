@@ -70,12 +70,12 @@ std::vector<double> BackwardPropagationNetwork::compute(std::vector<double> &inp
 
     // Input for the first layer
     std::vector<double> currentInput = input;
-
+    // Compute the intermediate output of each layer, and forward propagate that to the next layer
     for (Layer& layer : layers) {
         std::vector<double> intermediateOutput = layer.compute(currentInput);
         currentInput = intermediateOutput;
     }
-    return currentInput;
+    return currentInput; // Return the output provided by the last layer
 }
 
 void BackwardPropagationNetwork::reset() { for (Layer& l : layers) l.reset(); }
@@ -103,34 +103,40 @@ void BackwardPropagationNetwork::updateWeight(double learningRate, double moment
 double BackwardPropagationNetwork::train(struct finite_function &f, size_t iterationNumber, const double learningRate,
                                          const double momentum) {
     size_t epoch = 0;
-	double RMSE_ERROR;
+	double error;
     while (epoch < iterationNumber)
     {
-        // For all the elements in the finite function f
-        RMSE_ERROR = 0.0;
+
+        error = 0.0;
         size_t N = f.finite_function.size();
+
+        // For all the elements in the finite function f:
         for (int i = 0; i < N; i++) {
+            // Train the network over the current input
             std::vector<double> result = compute(f.finite_function[i].input);
-            RMSE_ERROR += std::pow(calculateQuadraticError(f.finite_function[i].output), 2);
+            // Calculate the error just for the heuristic's sake
+            error += std::pow(calculateQuadraticError(f.finite_function[i].output), 2);
 
-
+            // Perform the backpropagation algorithm over this input
             calculateDerivatives(f.finite_function[i].output);
+
+            // Update gradient and weight of each neuron in the network independently
             gradientUpdate();
             updateWeight(learningRate, momentum);
-            //std::cout << *this << std::endl;
         }
-        RMSE_ERROR = std::sqrt(RMSE_ERROR);
-        std::cout << RMSE_ERROR << "--" << epoch << std::endl;
+        error = std::sqrt(error);
+        std::cout << error << "--" << epoch << std::endl;
         epoch = epoch + 1;
 
-        //Adding some motivation so if the neural network is not converging after 4000 epochs it will start over again until it converges
-        if (epoch > 4000 && RMSE_ERROR > 0.5) {
+        //If the neural network is not converging after 4000 epochs, it might be possible that this network configuration does not provide a good local minimum. Therefore, it might be useful to reset the weights of the network and restart the training
+        if (epoch > 4000 && error > 0.5) {
             if (useRE) reset(re); else reset(re);
             epoch = 0;
         }
     }
 
-	return RMSE_ERROR;
+    // Error associated to the final configuration
+	return error;
 }
 
 void BackwardPropagationNetwork::finalize() {

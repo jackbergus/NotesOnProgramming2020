@@ -35,9 +35,18 @@ bool Rule::operator>(const Rule &rhs) const {
 }
 
 bool Rule::operator<=(const Rule &rhs) const {
-    return !(rhs < *this);
+    return (*this < rhs) || (*this == rhs);
 }
 
 bool Rule::operator>=(const Rule &rhs) const {
-    return !(*this < rhs);
+    return (*this > rhs) || (*this == rhs);
+}
+
+bool Rule::operator==(const Rule &rhs) const {
+    return IsSupsetOf(head,rhs.head) && IsSupsetOf(rhs.head,head) &&
+            IsSupsetOf(tail,rhs.tail) && IsSupsetOf(rhs.tail,tail);
+}
+
+bool Rule::operator!=(const Rule &rhs) const {
+    return !(rhs == *this);
 }

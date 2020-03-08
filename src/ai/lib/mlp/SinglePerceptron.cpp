@@ -49,29 +49,6 @@ single_perceptron::deltaRuleSinglePerceptron(std::vector<double> &inputs, double
     }
 }
 
-void single_perceptron::updateWeights(std::vector<double> &inputs, double learningRate, double momentum) {
-    double predictionOutput = calculate(inputs);
-    size_t N = std::min(input_weights.size(), inputs.size());
-    for (int i = 0; i < N; i++) {
-        if (std::isnan(input_weights[i])) {
-            std::cerr << input_weights[i] <<  std::endl;
-        }
-        double tmp = delta  * learningRate * sigma(inputs[i]) + momentum * sigma(input_weights[i]);
-        if (std::isnan(tmp)) {
-            std::cerr << input_weights[i] << " += " << delta << " * "<< learningRate << " * " << sigma(inputs[i]) << "+" << momentum <<"*"<< input_weights[i] << std::endl;
-        }
-        input_weights[i] += tmp;
-        //input_weights[i] -= learningRate * delta * inputs[i];
-    }
-    if (std::isnan(threshold)) {
-        std::cerr << threshold <<  std::endl;
-    }
-    threshold += delta * sigma(1.0) * learningRate + momentum * threshold;
-    if (std::isnan(threshold)) {
-        std::cerr << threshold << " += " << delta << " * "<< sigma(1.0) << "*" << learningRate << "+" << momentum <<"*"<< threshold << std::endl;
-    }
-}
-
 void training_or_perceptron() {
     single_perceptron perceptron;
     perceptron.addWeight(0.23).addWeight(0.73).setThreshold(0.2);

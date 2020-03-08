@@ -20,10 +20,9 @@
 #include <ai/datasets/DLibSplits.h>
 
 
-void mlp_train(const DLib_Splits& splits, const unsigned numberClasses, const size_t input_size) {/*
+void mlp_train(const DLib_Splits& splits, const unsigned numberClasses, const size_t input_size) {
     // Even better, we could change the former source code to ensure that all the training and testing datasets for the
     // 8 classes will have the same size.
-*/
     // The mlp takes column vectors as input and gives column vectors as output.  The dlib::matrix
     // object is used to represent the column vectors. So the first thing we do here is declare
     // a convenient typedef for the matrix object we will be using.
@@ -55,30 +54,23 @@ void mlp_train(const DLib_Splits& splits, const unsigned numberClasses, const si
                 distance = 0.0;
                 size_t N = std::min(splits.training_input.size(), splits.training_label_vector.size());
 
+                // Feeding the network all the inputs and outputs that were previously obtained
                 for (size_t i = 0; i<N; i++) {
                     net.train(splits.training_input[i], splits.training_label_vector[i]);
                 }
 
+                // Computing the average distance between all the
                 for (size_t i = 0; i<N; i++) {
                     double ithDistance = 0.0;
                     auto prediction = net(splits.training_input[i]);
                     const auto& expected = splits.training_label_vector[i];
-                    /*for (size_t j = 0; j<prediction.size(); j++) {
-                        ithDistance += std::pow(prediction(j) - expected(j), 2);
-                    }
-                    ithDistance /= ((double)prediction.size());
-                    ithDistance = std::sqrt(ithDistance);*/
-                    /// Sanity check: checking that both the vector representation and the training label have the expected representation
-                    ///assert(class_prediction_distance(splits.training_label_vector[i], splits.training_labels[i]) == 0.0);
                     ithDistance = class_prediction_distance(prediction, splits.training_labels[i]);
-
                     distance += ithDistance;
                 }
-
                 distance /= ((double)N);
+
+                // Increment the current epoch
                 epoch = epoch + 1;
-                //std::cout << distance << "~" << epoch << std::endl;
-                // In this case, doing no reset at all.
             }
 
             std::cout << "firstLayer: " << firstLayer << " secondLayer: " << secondLayer << " score: " << distance << std::endl;
@@ -100,8 +92,6 @@ void mlp_train(const DLib_Splits& splits, const unsigned numberClasses, const si
     // Note that if you run this program multiple times you will get different results. This
     // is because the mlp network is randomly initialized.
 
-    // each of these statements prints out the output of the network given a particular sample.
-
     size_t N = std::min(splits.testing_label_vector.size(), splits.testing_input.size());
     double distance = 0.0;
     for (size_t i = 0; i<N; i++) {
@@ -119,7 +109,6 @@ void mlp_train(const DLib_Splits& splits, const unsigned numberClasses, const si
     double precision = 1.0 - distance;
 
     std::cout << "Model precision over the testing data: " << precision << std::endl;
-
 }
 
 #include <dlib/svm_threaded.h> // contains one_vs_one_trainer
@@ -191,7 +180,7 @@ template <typename Metric> void multi_rtree_train() {
     // Training the model one class against the other
     using CLS = std::vector<decision_tree<Metric>>;
     CLS classifiers;
-    for (double classe = 1.0; classe <= 8.0; classe++) {
+    for (double classe = 1.0; classe <= info.second; classe++) {
         std::cout << classe << std::endl;
         struct decision_tree<Metric> predict_class(splits, classe);
         predict_class.expand(5);

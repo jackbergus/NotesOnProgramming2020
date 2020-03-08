@@ -13,10 +13,9 @@ static inline double xlogeps(double x) {
     return (x <= eps) ? 0.0 : x * std::log2(x);
 }
 
-double entropy_metric::metric_root(double posRoot, double negRoot) const { return - posRoot * xlogeps(posRoot) - negRoot * xlogeps(negRoot); }
-
-double entropy_metric::subtree_part(double freq_posLeft) { return - freq_posLeft * xlogeps(freq_posLeft) - (1.0 - freq_posLeft) * xlogeps(1.0 - freq_posLeft); }
+double entropy_metric::node_iota(double freq_posLeft) { return - freq_posLeft * xlogeps(freq_posLeft) - (1.0 - freq_posLeft) * xlogeps(1.0 - freq_posLeft); }
 
 double entropy_metric::posterior(double sizeLeft, double sizeTotal, double posLeft, double posRight) {
-    return (0.5) * subtree_part(posLeft) + (0.5) * subtree_part(posRight);
+    double sizeRight = sizeTotal - sizeLeft;
+    return (sizeLeft / sizeTotal) * node_iota(posLeft) + (sizeRight / sizeTotal) * node_iota(posRight);
 }

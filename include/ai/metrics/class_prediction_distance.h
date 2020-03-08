@@ -8,7 +8,7 @@
 #include <dlib/matrix.h>
 #include <set>
 
-double class_prediction_distance(const dlib::matrix<double>& m, const unsigned long expected);
+double class_prediction_distance(const dlib::matrix<double> &m, const unsigned long expected);
 
 template <typename T>
 double class_prediction_distance(const T expected,
@@ -17,39 +17,30 @@ double class_prediction_distance(const T expected,
     // Getting the average distance between all the candidates and the expected label
     double avgPredictionSimilarity = 0.0;
 
-    // a) first, evaluate the average distance between the componetns
+    // a) first, evaluate the average distance between the components
     for (auto it = candidates.begin(); it != candidates.cend(); it++) {
         // evaluate the distance between expected and predicted label
         double tmpDistance = std::abs(((double)*it) - (double)expected);
         // sum the normalized distance
         avgPredictionSimilarity += (tmpDistance / (tmpDistance + 1));
     }
-    //std::cout << " vs " << expected << std::endl;
     if (!candidates.empty()) avgPredictionSimilarity /= ((double)candidates.size());
     // b) then, invert it so it becomes a similarity
     avgPredictionSimilarity = 1.0 - avgPredictionSimilarity;
 
-#define WEIGHTED_DISTANCE
-#ifdef WEIGHTED_DISTANCE
     if (candidates.empty())
         return 1.0;             // If no candidates were returned, then I have the maximum error
     if (candidates.find(expected) != candidates.cend()) {
         if (candidates.size() == 1)
-            return 0.0;        // If the precision was maximum, then the error was minimum
+            return 0.0;         // If the precision was maximum, then the error was minimum
         else {
-            // The distance shall be the number of the wrong candidates over
-            double tmp =  1.0 - ((avgPredictionSimilarity * (1.0 - ((double)candidates.size() - 1.0) / ((double)candidates.size()))));
-            //// assert((tmp >= 0) && (tmp <= 1.0)); /// sanity check: the normalized distance shall be in [0,1]
-            return tmp;
+            // The distance shall be weighted by the number of wrong candidates that we get (all the candidates minus the correclty predicted one)
+            return 1.0 - ((avgPredictionSimilarity * (1.0 - ((double)candidates.size() - 1.0) / ((double)candidates.size()))));
         }
     }  else {
-        double tmp = 1.0 - ((avgPredictionSimilarity * (1.0 - ((double)candidates.size()) / ((double)candidates.size() + 1.0))));
-        //// assert((tmp >= 0) && (tmp <= 1.0)); /// sanity check: the normalized distance shall be in [0,1]
-        return tmp;
+        // The distance shall be weighted by the number of wrong candidates that we get (all the predicted candidates)
+        return 1.0 - ((avgPredictionSimilarity * (1.0 - ((double)candidates.size()) / ((double)candidates.size() + 1.0))));
     }
-#else
-    return avgPredictionDistance;
-#endif
 }
 
 #endif //TUTORIALS_CLASS_PREDICTION_DISTANCE_H

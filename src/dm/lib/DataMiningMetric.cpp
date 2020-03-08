@@ -6,14 +6,14 @@
 #include "dm/DataMiningMetric.h"
 
 DataMiningMetrics::DataMiningMetrics(const std::set<Pattern<std::string>> &S) {
-    for (auto x : S) {
-        std::vector<std::string> v{};
+    for (auto x : S) { // For each pattern
+        std::vector<std::string> v{}; // Store it as a vector
         v.reserve(x.first.size());
         for (auto it = x.first.begin(); it != x.first.end(); ) {
             v.push_back(std::move(x.first.extract(it++).value()));
         }
-        f[v] = x.second;
-        sumAll += x.second;
+        f[v] = x.second; // Associate the support to the rule represented as a vector
+        sumAll += x.second; // Increment the number of the (frequent) transactions (Suggestion: replace it with the actual size of |T|)
     }
 }
 

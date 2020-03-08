@@ -43,16 +43,19 @@ Perceptron::Perceptron(size_t id, size_t N, std::default_random_engine &re) : ne
     }
 }
 
-double Perceptron::compute(std::vector<double> &input) { //Checked
+double Perceptron::compute(std::vector<double> &input) {
     size_t N = std::min(input.size(), weights.size());
-    input_values = input;
+    input_values = input; // For backpropagation purposes, save the values provided as input
 
+    // Perform the weighted sum of all the inputs with their associated weight values
     net = 0.0;
     for (size_t i = 0; i<N; i++) {
         net += input[i] * weights[i].current;
     }
+    // Add the bias as a different
     net += theta.current;
 
+    // Apply the activation sigmoid function, store a copy of the result, and then return it
     return (out = SIGMOID(net));
 }
 
@@ -73,7 +76,10 @@ double Perceptron::calculateError(double expectedValue) {
 }
 
 std::vector<double> Perceptron::calculateDerivative(double deltasFromForward) {
-    derivative = (exp(net) / pow((1 + exp(net)), 2)) * deltasFromForward;
+    // Yet another approach to represent the second part from \delta_j: instead of computing net*(1-net) as in the
+    // tutorial, we can use e^net / (1+e^net)^2.
+    // deltasFromForward can be also the delta weight backprogagated from the network
+    derivative = deltasFromForward * (exp(net) / pow((1 + exp(net)), 2)) ;
     return weights * derivative;
 }
 
@@ -88,14 +94,18 @@ void Perceptron::updateGradient() {
     theta_gradient = gradient(derivative);
 }
 
-void Perceptron::updateWeight(double learningRate, double momentum) {  //ERROR
+void Perceptron::updateWeight(double learningRate, double momentum) {
     double deltaWeight;
     for (size_t i = 0; i<weights.size(); i++) {
         weight& x = weights[i]; // ref
+        // The last equation needs to be computed for each weight associated to the network
         deltaWeight = (learningRate * input_gradients[i]) + (momentum * x.previous);
+        // Preserving the current increment for the momentum computation
         x.previous = deltaWeight;
+        // Updating the current weight
         x.current = x.current + deltaWeight;
     }
+    // Remember! The bias is also considered as a specific case of a weight associated to an input always returning 1
     deltaWeight = (learningRate * theta_gradient) + (momentum * theta.previous);
     theta.previous = deltaWeight;
     theta.current = theta.current + deltaWeight;

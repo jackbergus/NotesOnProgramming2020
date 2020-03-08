@@ -35,25 +35,28 @@ int main(void) {
     // This file doesn't fit as it is in GitHub. So, pick the cr_data_1535999786739.zip file from the dataset_clashroyale
     // submodule, and unzip it in 'data/cr_data_1535999786739.csv'
     std::string path = "data/cr_data_1535999786739.csv";
+    // File where we can store the previously computed frequent patterns by the FPGrowth algorithm
     std::string patterns_file = "data/mined_patterns.txt";
 
     std::set<Pattern<std::string>> patterns;
+    // Checking if the file exists: if the file doesn't exist, then I need to recompute the frequent itemsets from the database
     if (!(access(patterns_file.c_str(), F_OK) != -1)) {
-
+        // Setting ^ as an escape characeter, and using all the possible spaces to be trimmed.
         io::CSVReader<31, io::trim_chars<' ', '\t'>, io::no_quote_escape<'^'>> clash_royale{path};
+        // Defining which are the relevant columns to be read, and ignoring the others
         clash_royale.read_header(io::ignore_extra_column, "type", "winner", "utctime", "name_P1", "tag_P1", "clan_P1", "startTrophies_P1", "crownsEarned_P1", "human_deck_P1", "strenght_P1_0", "strenght_P1_1", "strenght_P1_2", "strenght_P1_3", "strenght_P1_4", "strenght_P1_5", "strenght_P1_6", "strenght_P1_7", "name_P2", "tag_P2", "clan_P2", "startTrophies_P2", "crownsEarned_P2", "human_deck_P2", "strenght_P2_0", "strenght_P2_1", "strenght_P2_2", "strenght_P2_3", "strenght_P2_4", "strenght_P2_5", "strenght_P2_6", "strenght_P2_7");
-
+        // Vector storing all the transactions read from the CSV file
         std::vector<Transaction<std::string>> transactions;
         {
-
+            // Shorthand for a set of transaction sorted in lexicographical order
             using DeckSet = std::set<Transaction<std::string>, VTLexic>;
-
+            // Separating the decks that wins from the decks that lose some tournaments
             DeckSet winning_deck, losing_deck;
-
-            // Reading all the elements
+            // Reading all the elements in the CSV file
             std::cout << "Reading and projecting all the battles from the dataset..." << std::endl;
             bool continueReading = true;
             do {
+                // Read a line from the file if possible
                 const auto x = ClashRoyaleDatasetMatch::read(clash_royale);
                 if (x) {                                                // If it was possible to read the information from the file
                     winning_deck.emplace(x->getWinner().asFPTransaction());
@@ -63,7 +66,6 @@ int main(void) {
                     continueReading = false;                            // Otherwise, fail and stop reading
                 }
             } while (continueReading);
-
 
             /*
              * Now, we want to obtain the set of decks that are always winning: that information will be then fed to the FPGrowth algorithm
@@ -79,7 +81,6 @@ int main(void) {
                 winning_deck.swap(c);
             }
             std::cout << "Resulting number of always winning decks: " << winning_deck.size() << std::endl;
-
             std::copy(winning_deck.begin(), winning_deck.end(), std::back_inserter(transactions));
         }
         std::cout << std::endl << std::endl;
@@ -96,7 +97,7 @@ int main(void) {
         }
 
         {
-            std::cout << "c) Saving all the patterns in the file as a backup measure" << std::endl;
+            std::cout << "c) Saving all the patterns in the file as a backup" << std::endl;
             std::ofstream mined_patterns{patterns_file};
             for (const Pattern<std::string>& pattern : patterns) {
                 mined_patterns << pattern.second << " : ";
@@ -107,10 +108,12 @@ int main(void) {
             }
         }
     } else {
-        std::cout << "Patterns have been already mined in a previous computation: loading from the file!" << std::endl;
+        // ... If the file exists, then:
+        std::cout << "Patterns have been already mined in a previous computation: loading those from the file!" << std::endl;
+        // Opening the existing file containing the patterns
         std::ifstream mined_patterns{patterns_file};
 
-        // The place that will contain the line from the file
+        // The variable containing each line from the file
         std::string line;
 
         // Reading all the lines
@@ -135,19 +138,19 @@ int main(void) {
         }
     }
 
-
-    /**
-     * Initializing the scoring functions
+    /*
+     * Initializing the scoring functions using the mined patterns from the FPGrowth algorithm
      */
     DataMiningMetrics counter{patterns};
     size_t count = 0;
 
+    // For each frequent itemset, generate a set of possible relevant rules
     for (const Pattern<std::string>& pattern : patterns) {
-        if (pattern.first.size() <= 1) continue;                            // I cannot extract a good pattern if we have only one element.
+        if (pattern.first.size() <= 1) continue;                            // I cannot extract any significant rule from a singleton!
 
-        RulesFromFrequentItemset rffi{counter};
-        for (auto& result: rffi.generate_hypotheses(pattern)) {
-            std::cout  << result << std::endl;
+        RulesFromFrequentItemset rffi{counter};                         // Generate the top rule
+        for (auto& result: rffi.generate_hypotheses(pattern)) {            // Generate the hypotheses containing a lift greater than one
+            std::cout  << result << std::endl;                             // Printing each successful outcome
             count++;
         }
     }

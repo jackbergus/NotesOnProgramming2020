@@ -34,7 +34,7 @@
 #if	__BYTE_ORDER == __LITTLE_ENDIAN
 #define IS_LITTLE_ENDIAN
 #elif __BYTE_ORDER == __BIG_ENDIAN
-#define IS_BIG_ENDIAN
+#define IS_BIG_ENDIAN00
 #endif 
 #endif
 

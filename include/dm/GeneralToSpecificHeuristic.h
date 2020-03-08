@@ -7,7 +7,7 @@
 
 #include <queue>
 #include <vector>
-#include <set>
+#include <unordered_set>
 
 
 /**
@@ -55,8 +55,8 @@ protected:
 public:
     GeneralToSpecificHeuristic() : queue{} {}
 
-    std::set<DataType> generate_hypotheses(const DataType& top, double score) {
-        std::set<DataType> hypotheses;
+    std::unordered_set<DataType> generate_hypotheses(const DataType& top, double score) {
+        std::unordered_set<DataType> hypotheses;
 
         // C++'s PriorityQueue doesn't have a clear method: need to hardcode that
         queue = PriorityQueue{};
@@ -66,7 +66,6 @@ public:
         while (!queue.empty()) {
             const auto& h = queue.top();    // Passing the element by reference
             if (quality_assessment(h)) {
-                hypotheses.insert(h.second);
                 queue.pop();                // I'm done copying it: I can free the element
             } else {
                 auto h_second = h.second;   // Copy a part of the value...

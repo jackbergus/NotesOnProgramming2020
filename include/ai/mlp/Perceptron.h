@@ -147,8 +147,15 @@ struct Perceptron {
      */
     void updateWeight(double learningRate = 1.414213562, double momentum = 0.25);
 
+    /**
+     * Resets the neuron's weights using the standard C way to generate random numbers
+     */
     void reset();
 
+    /**
+     * Resetting the neuron's weights using a default random number generator
+     * @param re    Random number generator
+     */
     void reset(std::default_random_engine &re);
 };
 

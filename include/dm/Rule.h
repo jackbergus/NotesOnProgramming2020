@@ -24,6 +24,7 @@ template <typename T> bool IsSupsetOf(std::vector<T> A, std::vector<T> B) {
     return std::includes(A.begin(), A.end(), B.begin(), B.end());
 }
 
+
 /**
  * Represents a simple mined rule
  */
@@ -47,25 +48,43 @@ struct Rule {
      */
     Rule(const Pattern<std::string>& itemset);
 
-/**
- * Printing some rules in output
- * @param os
- * @param rule
- * @return
- */
+    /**
+     * Printing some rules in output
+     * @param os
+     * @param rule
+     * @return
+     */
     friend std::ostream &operator<<(std::ostream &os, const Rule &rule);
 
     /**
      * Comparison operator: using the formal definition of precedence!
      */
     bool operator<(const Rule &rhs) const;
-
     bool operator>(const Rule &rhs) const;
-
     bool operator<=(const Rule &rhs) const;
-
     bool operator>=(const Rule &rhs) const;
+    bool operator==(const Rule &rhs) const;
+    bool operator!=(const Rule &rhs) const;
 };
+
+namespace std {
+    template<>
+    class hash<Rule> {
+    public:
+        size_t operator()(const Rule &s) const
+        {
+            size_t i = 31;
+            size_t j = 7;
+            for (const std::string& x : s.head) {
+                i = std::hash<std::string>()(x) * 31 + i;
+            }
+            for (const std::string& x : s.tail) {
+                j = std::hash<std::string>()(x) * 7 + i;
+            }
+            return i ^ ( j << 1 );
+        }
+    };
+}
 
 
 

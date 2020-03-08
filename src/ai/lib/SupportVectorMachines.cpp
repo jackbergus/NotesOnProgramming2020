@@ -26,7 +26,6 @@ void train_binary_svm(bool (*binary_function)(int, int)) {
     // https://en.wikipedia.org/wiki/Radial_basis_function_kernel
     typedef dlib::radial_basis_kernel<sample_type> kernel_type;
 
-
     // Now we make objects to contain our samples and their respective labels.
     std::vector<sample_type> samples;
     std::vector<double> labels;

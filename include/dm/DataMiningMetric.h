@@ -21,8 +21,8 @@ using VTLexic = LexicographicalOrder<std::vector<std::string>, std::string>;
  */
 struct DataMiningMetrics {
 
-    std::map<std::vector<std::string>, unsigned long, VTLexic> f;///<  Storing the item-support information
-    double sumAll = 0.0;                                         ///<  Sum of all the supports
+    std::map<std::vector<std::string>, unsigned long, VTLexic> f;///<  Storing the item-support information from the FPGrowth algorithm
+    double sumAll = 0.0;                                         ///<  Sum of all the supports for |T|
 
     /**
      * Initialization via the output of the FPGrowth algorithm

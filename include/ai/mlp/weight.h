@@ -9,7 +9,7 @@
 #include <ostream>
 
 /**
- * A weight defines the
+ * A weight structure contains both the current weight value and the one obtained in the previous training step
  */
 struct weight {
     double previous;
@@ -32,8 +32,15 @@ struct weight {
      */
     weight();
 
+    /**
+     * Resetting the weight using the C default random number generator
+     */
     void reset();
 
+    /**
+     * Resetting the weight using a C++11 random number generator
+     * @param re
+     */
     void reset(std::default_random_engine &re);
 
     friend std::ostream &operator<<(std::ostream &os, const weight &weight);

@@ -70,8 +70,6 @@ struct single_perceptron {
     */
     void deltaRuleSinglePerceptron(std::vector<double>& inputs, double expectedOutput, double learningRate = 0.01);
 
-    void updateWeights(std::vector<double>& inputs, double learningRate = 0.01, double momentum = 0.25);
-
     /*
     * Delta rule for the back propagation as established by the backpropagation algorithm in 1986 by rumelhart, Hinton and Williams
 

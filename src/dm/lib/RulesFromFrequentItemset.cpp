@@ -10,25 +10,27 @@ bool RulesFromFrequentItemset::quality_assessment(const std::pair<double, Rule> 
 
 std::vector<std::pair<double, Rule>> RulesFromFrequentItemset::specialize_hypothesis(const Rule &hypothesis) const {
     std::vector<std::pair<double, Rule>> result;
-    for (const std::string& x : hypothesis.head) {
-        Rule newRule;
+    for (const std::string& x : hypothesis.head) { // For each x appearing in the head of a hypothesis...
+        Rule newRule;                              // ... generate a novel rule ...
         {
+            // ... having as a tail the tail of hypothesis where x is added ...
             std::vector<std::string> succ{hypothesis.tail};
             succ.emplace_back(x);
-
-            // The fastest approach of removing duplicates from a vector is to create a set, and then move it back to a vector
+            // (Please Note: the fastest approach of removing duplicates from a vector is to create a set, and then move it back to a vector)
             {
                 std::set<std::string> setSucc( succ.begin(), succ.end() );
                 newRule.tail.assign(setSucc.begin(), setSucc.end() );
             }
         }
 
-        // Remove from the successors the current element, x
+        // ... and as a head all the elements belonging to the hypothesis's head minus x, that was currently added to the tail
         for (const std::string& y : hypothesis.head)
             if (x != y) newRule.head.emplace_back(y);
 
+        // ... Associate a score (e.g., lift) to the newly generated rule
         result.emplace_back(scorer.lift(newRule), newRule);
     }
+    // Return all the ranked specializations of the hypothesis
     return result;
 }
 
@@ -55,7 +57,7 @@ void RulesFromFrequentItemset::prune(GeneralToSpecificHeuristic<Rule>::PriorityQ
 RulesFromFrequentItemset::RulesFromFrequentItemset(DataMiningMetrics &scorer) : scorer(scorer) {
 }
 
-std::set<Rule> RulesFromFrequentItemset::generate_hypotheses(const Pattern<std::string> &pattern) {
+std::unordered_set<Rule> RulesFromFrequentItemset::generate_hypotheses(const Pattern<std::string> &pattern) {
     Rule r{pattern};
     return GeneralToSpecificHeuristic::generate_hypotheses(r, scorer.lift(r));
 }

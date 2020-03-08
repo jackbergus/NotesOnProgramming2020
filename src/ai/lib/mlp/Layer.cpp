@@ -54,11 +54,11 @@ std::vector<double> Layer::calculateDerivative(std::vector<double> &expectedValu
     assert(expectedValue.size() == this->perceptrons.size());
     size_t N = expectedValue.size();
 
-    std::vector<double> result;
+    std::vector<double> result; // Computing the
     for (size_t i = 0; i<N; i++) {
         result +=  FromExpectedValue ?
-                   perceptrons[i].calculateDerivativeFromExpected(expectedValue[i]) :
-                   perceptrons[i].calculateDerivative(expectedValue[i]);
+                   perceptrons[i].calculateDerivativeFromExpected(expectedValue[i]) : // output neuron
+                   perceptrons[i].calculateDerivative(expectedValue[i]);              // any other neuron
     }
 
     return result;
